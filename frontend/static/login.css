@@ -1,0 +1,78 @@
+#content {
+    display: 'flex';
+    flex-direction: column;
+    background-image: url(./images/loveatwork.jpeg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+  
+#app {
+    font-family: 'Roboto', sans-serif;
+    font-size: 50px;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+}
+  
+#loginContainer {
+    display: 'flex';
+    margin-top: 70px;
+    align-content: 'center';
+    width: 30%;
+    height: 60%;
+    flex-direction: 'column';
+    background-color: white;
+    opacity: 0.7;
+}
+
+#welcome {
+    display: flex;
+    justify-content: center;
+    padding-top: 40px;
+    letter-spacing: 2px;
+    font-family: 'Roboto';
+    font-size: 36px;
+    color: #575759 
+}
+  
+#or {
+    display: flex;
+    color: #575759;
+    justify-content: center;
+    margin-top: 20px;
+}
+  
+#buttonstyle {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#logo {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    font-family: 'Roboto';
+    font-size: 50px;
+}
+
+#my {
+    color: #575759;
+    font-family: 'Olivier'
+}
+
+#meet {
+    color: #F7798E;
+    font-family: 'Roboto';
+}
+
+#type {
+    color: #F48477;
+    font-family: 'Roboto';
+}
+
+#fb {
+    display: flex;
+    justify-content: center;
+    margin-top: 80px 
+}
