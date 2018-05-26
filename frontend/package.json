@@ -1,5 +1,5 @@
 {
-  "name": "JSPROJECT",
+  "name": "jsproject",
   "version": "1.0.0",
   "main": "server.js",
   "author": "Julia Benais",
@@ -25,6 +25,7 @@
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.4.0",
     "nodemon": "^1.17.3",
+    "popper.js": "^1.14.3",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-hot-loader": "^4.1.1",
