@@ -1,0 +1,17 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "./bin/server.js",
+  "repository": "https://github.com/jbenais/jsproject",
+  "author": "Mickael AU",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "nodemon": "^1.17.5"
+  },
+  "scripts": {
+    "start": "node ./bin/server.js",
+    "start-continue": "nodemon ./bin/server.js"
+  }
+}
