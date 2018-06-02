@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "./bin/server.js",
+  "main": "./src/bin/server.js",
   "repository": "https://github.com/jbenais/jsproject",
   "author": "Mickael AU",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "pg-promise": "^8.4.4"
   },
   "scripts": {
-    "start": "node ./bin/server.js",
-    "start-continue": "nodemon ./bin/server.js"
+    "start": "node ./src/bin/server.js",
+    "start-continue": "nodemon ./src/bin/server.js"
   }
 }

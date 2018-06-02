@@ -1,5 +1,5 @@
 const db = require('../index');
-const TABLE_NAME =  't_orientation'
+const TABLE_NAME =  't_orientation';
 const MESSAGE_OK = 'OK';
 const MESSAGE_ERROR = 'An error occured';
 const MESSAGE_NOT_FOUND = 'No data has been found';
