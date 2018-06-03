@@ -4,6 +4,10 @@ const QueryFile = require('pg-promise').QueryFile;
 const path = require('path');
 
 module.exports = {
+    mbti: {
+        getAll: sql('./mbti/getAll.sql'),
+        getById: sql('./mbti/getById.sql')
+    },
     users: {
         add: sql('./users/add.sql'),
         getAll: sql('./users/getAll.sql'),

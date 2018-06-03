@@ -1,11 +1,10 @@
 const db = require('../index');
-const TABLE_NAME =  't_mbti';
+const sqlMBTI = require('../../sql').mbti;
+
 const MESSAGE_OK = 'OK';
-const MESSAGE_ERROR = 'An error occured';
-const MESSAGE_NOT_FOUND = 'No data has been found';
 
 function getAllMBTI(req, res, next) {
-    db.any(`SELECT * FROM ${TABLE_NAME}`)
+    db.any(sqlMBTI.getAll)
         .then(function (data) {
             const status = 200
             res.status(200)
@@ -28,8 +27,10 @@ function getAllMBTI(req, res, next) {
 }
 
 function getSingleMBTIById(req, res, next) {
-    const id = req.params.id;
-    db.one(`SELECT * FROM ${TABLE_NAME} WHERE id = ${id}`)
+    const id = {
+        id: req.params.id
+    }
+    db.one(sqlMBTI.getById, id)
         .then(function (data) {
             const status = 200
             res.status(status)
@@ -53,5 +54,5 @@ function getSingleMBTIById(req, res, next) {
 
 module.exports = {
     getAllMBTI,
-    getSingleMBTIById
+    getSingleMBTIById,
 };
