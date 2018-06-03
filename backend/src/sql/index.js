@@ -24,7 +24,14 @@ module.exports = {
     },
     users: {
         add: sql('./users/add.sql'),
-        getAll: sql('./users/getAll.sql'),
+        getAll: sql('./users/getAll.sql')
+    },
+    userPreferences: {
+        add: sql('./userPreferences/add.sql'),
+        getAll: sql('./userPreferences/getAll.sql'),
+        getById: sql('./userPreferences/getById.sql'),
+        getByIdUser: sql('./userPreferences/getByIdUser.sql'),
+        getByIdMBTI: sql('./userPreferences/getByIdMBTI.sql')
     }
 };
 
