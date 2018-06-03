@@ -38,7 +38,7 @@ CREATE TABLE T_Weakness (
 );
 
 CREATE TABLE T_MBTI_Strength (
-  Id                SERIAL            PRIMARY KEY NOT NULL,
+  Id                 SERIAL            PRIMARY KEY NOT NULL,
   Id_MBTI            BIGINT            NOT NULL REFERENCES T_MBTI(Id),
   Id_Strength        BIGINT            NOT NULL REFERENCES T_Strength(Id)
 );
@@ -66,7 +66,7 @@ CREATE TABLE T_User (
 
 CREATE TABLE T_Address (
   Id                SERIAL            PRIMARY KEY NOT NULL,
-  Id_User            BIGINT            NOT NULL REFERENCES T_User(Id),
+  Id_User           BIGINT           UNIQUE NOT NULL REFERENCES T_User(Id),
   Latitude          REAL              NOT NULL,
   Longitude         REAL              NOT NULL
 );
