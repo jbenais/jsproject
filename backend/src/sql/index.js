@@ -8,6 +8,10 @@ module.exports = {
         getAll: sql('./mbti/getAll.sql'),
         getById: sql('./mbti/getById.sql')
     },
+    orientation: {
+        getAll: sql('./orientation/getAll.sql'),
+        getById: sql('./orientation/getById.sql')
+    },
     users: {
         add: sql('./users/add.sql'),
         getAll: sql('./users/getAll.sql'),

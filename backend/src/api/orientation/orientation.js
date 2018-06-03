@@ -1,11 +1,9 @@
 const db = require('../index');
-const TABLE_NAME =  't_orientation';
+const sqlOrientation = require('../../sql').orientation;
 const MESSAGE_OK = 'OK';
-const MESSAGE_ERROR = 'An error occured';
-const MESSAGE_NOT_FOUND = 'No data has been found';
 
 function getAllOrientation(req, res, next) {
-    db.any(`SELECT * FROM ${TABLE_NAME}`)
+    db.any(sqlOrientation.getAll)
         .then(function (data) {
             const status = 200
             res.status(200)
@@ -28,8 +26,10 @@ function getAllOrientation(req, res, next) {
 }
 
 function getSingleOrientationById(req, res, next) {
-    const id = req.params.id;
-    db.one(`SELECT * FROM ${TABLE_NAME} WHERE id = ${id}`)
+    const id = {
+        id: req.params.id
+    }
+    db.one(sqlOrientation.getById, id)
         .then(function (data) {
             const status = 200
             res.status(status)
