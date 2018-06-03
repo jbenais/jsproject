@@ -1,9 +1,10 @@
 const db = require('../index');
-const TABLE_NAME =  't_target';
+const sqlTarget = require('../../sql').target;
+
 const MESSAGE_OK = 'OK';
 
 function getAllTarget(req, res, next) {
-    db.any(`SELECT * FROM ${TABLE_NAME}`)
+    db.any(sqlTarget.getAll)
         .then(function (data) {
             const status = 200
             res.status(200)
@@ -26,8 +27,10 @@ function getAllTarget(req, res, next) {
 }
 
 function getSingleTargetById(req, res, next) {
-    const id = req.params.id;
-    db.one(`SELECT * FROM ${TABLE_NAME} WHERE id = ${id}`)
+    const id = {
+        id: req.params.id
+    }
+    db.one(sqlTarget.getById, id)
         .then(function (data) {
             const status = 200
             res.status(status)
