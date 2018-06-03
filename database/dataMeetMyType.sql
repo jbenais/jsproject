@@ -71,3 +71,6 @@ INSERT INTO t_target
          (DEFAULT, 'Friends with benefits'),
          (DEFAULT, 'Friends'),
          (DEFAULT, 'Work buddy ');
+
+INSERT INTO t_profession
+  VALUES (DEFAULT, 'Student');

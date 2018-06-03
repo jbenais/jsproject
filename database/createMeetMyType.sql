@@ -4,23 +4,19 @@ DROP DATABASE IF EXISTS meetmytype;
 CREATE DATABASE meetmytype;
 \c meetmytype
 -- Create tables
-
-CREATE TABLE T_Address (
-  Id                SERIAL            PRIMARY KEY NOT NULL,
-  Latitude          REAL              NOT NULL,
-  Longitude         REAL              NOT NULL
-);
-
+--OK
 CREATE TABLE T_Orientation (
   Id                SERIAL            PRIMARY KEY NOT NULL,
   Name              VARCHAR(64)       UNIQUE NOT NULL
 );
 
+--OK
 CREATE TABLE T_Target (
   Id                SERIAL            PRIMARY KEY NOT NULL,
   Name              VARCHAR(128)      UNIQUE NOT NULL
 );
 
+--OK
 CREATE TABLE T_Profession (
   Id                SERIAL            PRIMARY KEY NOT NULL,
   Name              VARCHAR(64)       UNIQUE NOT NULL
@@ -43,14 +39,14 @@ CREATE TABLE T_Weakness (
 
 CREATE TABLE T_MBTI_Strength (
   Id                SERIAL            PRIMARY KEY NOT NULL,
-  IdMBTI            BIGINT            NOT NULL REFERENCES T_MBTI(Id),
-  IdStrength        BIGINT            NOT NULL REFERENCES T_Strength(Id)
+  Id_MBTI            BIGINT            NOT NULL REFERENCES T_MBTI(Id),
+  Id_Strength        BIGINT            NOT NULL REFERENCES T_Strength(Id)
 );
 
 CREATE TABLE T_MBTI_Weakness (
   Id                SERIAL            PRIMARY KEY NOT NULL,
-  IdMBTI            BIGINT            NOT NULL REFERENCES T_MBTI(Id),
-  IdWeakness        BIGINT            NOT NULL REFERENCES T_Weakness(Id)
+  Id_MBTI            BIGINT            NOT NULL REFERENCES T_MBTI(Id),
+  Id_Weakness        BIGINT            NOT NULL REFERENCES T_Weakness(Id)
 );
 
 CREATE TABLE T_User (
@@ -60,35 +56,42 @@ CREATE TABLE T_User (
   Lastname          VARCHAR(64)     NOT NULL,
   Password          VARCHAR(64)     NOT NULL,
   Age               SMALLINT        NOT NULL,
-  IsMale            BOOLEAN         NOT NULL DEFAULT TRUE,
-  Description       VARCHAR(512)    ,
-  IdProfession      BIGINT          NOT NULL REFERENCES T_Profession(Id),
-  IdAddress         BIGINT          NOT NULL REFERENCES T_Address(Id),
-  IdMBTI            BIGINT          NOT NULL REFERENCES T_MBTI(Id),
-  IdOrientation     BIGINT          NOT NULL REFERENCES T_Orientation(Id)
+  Is_Male            BOOLEAN         NOT NULL DEFAULT TRUE,
+  Description       VARCHAR(512)    , 
+  Id_Profession      BIGINT          NOT NULL REFERENCES T_Profession(Id),
+  Id_MBTI            BIGINT          NOT NULL REFERENCES T_MBTI(Id),
+  Id_Orientation     BIGINT          NOT NULL REFERENCES T_Orientation(Id)
+);
+
+
+CREATE TABLE T_Address (
+  Id                SERIAL            PRIMARY KEY NOT NULL,
+  Id_User            BIGINT            NOT NULL REFERENCES T_User(Id),
+  Latitude          REAL              NOT NULL,
+  Longitude         REAL              NOT NULL
 );
 
 CREATE TABLE T_User_MBTI_Preferences (
   Id                SERIAL          PRIMARY KEY NOT NULL,
-  IdUser            BIGINT          NOT NULL REFERENCES T_User(Id),
-  IdMBTI            BIGINT          NOT NULL REFERENCES T_MBTI(Id)
+  Id_User            BIGINT          NOT NULL REFERENCES T_User(Id),
+  Id_MBTI            BIGINT          NOT NULL REFERENCES T_MBTI(Id)
 );
 
 CREATE TABLE T_User_Target (
   Id                SERIAL          PRIMARY KEY NOT NULL,
-  IdUser            BIGINT          NOT NULL REFERENCES T_User(Id),
-  IdTarget          BIGINT          NOT NULL REFERENCES T_Target(Id)
+  Id_User            BIGINT          NOT NULL REFERENCES T_User(Id),
+  Id_Target          BIGINT          NOT NULL REFERENCES T_Target(Id)
 );
 
 CREATE TABLE T_User_Picture (
   Id                SERIAL          PRIMARY KEY NOT NULL,
-  IdUser            BIGINT          NOT NULL REFERENCES T_User(Id),
+  Id_User            BIGINT          NOT NULL REFERENCES T_User(Id),
   Url               VARCHAR(256)
 );
 
 CREATE TABLE T_Matches (
   Id                SERIAL          PRIMARY KEY NOT NULL,
-  IdUser            BIGINT          NOT NULL REFERENCES T_User(Id),
-  IdUserTarget      BIGINT          NOT NULL REFERENCES T_User(Id),
-  IsMatched         BOOLEAN         NOT NULL DEFAULT FALSE
+  Id_User            BIGINT          NOT NULL REFERENCES T_User(Id),
+  Id_UserTarget      BIGINT          NOT NULL REFERENCES T_User(Id),
+  Is_Matched         BOOLEAN         NOT NULL DEFAULT FALSE
 );
