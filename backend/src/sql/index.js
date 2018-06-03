@@ -32,6 +32,13 @@ module.exports = {
         getById: sql('./userPreferences/getById.sql'),
         getByIdUser: sql('./userPreferences/getByIdUser.sql'),
         getByIdMBTI: sql('./userPreferences/getByIdMBTI.sql')
+    },
+    userTarget: {
+        add: sql('./userTarget/add.sql'),
+        getAll: sql('./userTarget/getAll.sql'),
+        getById: sql('./userTarget/getById.sql'),
+        getByIdUser: sql('./userTarget/getByIdUser.sql'),
+        getByIdTarget: sql('./userTarget/getByIdTarget.sql')
     }
 };
 
