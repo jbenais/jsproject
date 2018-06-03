@@ -5,11 +5,13 @@ const mbti = require('./mbti');
 const orientation = require('./orientation');
 const target = require('./target');
 const user = require('./user');
+const address = require('./address');
 
 router.use('/mbti', mbti);
 router.use('/orientation', orientation);
 router.use('/target', target);
 router.use('/user', user);
+router.use('/address', address);
 
 router.get('/', function(req, res, next) {
     res.status(200);

@@ -8,6 +8,12 @@ module.exports = {
         getAll: sql('./mbti/getAll.sql'),
         getById: sql('./mbti/getById.sql')
     },
+    address:{
+        add: sql('./address/add.sql'),
+        getAll: sql('./address/getAll.sql'),
+        getById: sql('./address/getById.sql'),
+        getByIdUser: sql('./address/getByIdUser.sql')
+    },
     target: {
         getAll: sql('./target/getAll.sql'),
         getById: sql('./target/getById.sql')
