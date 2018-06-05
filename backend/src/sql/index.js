@@ -39,6 +39,14 @@ module.exports = {
         getById: sql('./userTarget/getById.sql'),
         getByIdUser: sql('./userTarget/getByIdUser.sql'),
         getByIdTarget: sql('./userTarget/getByIdTarget.sql')
+    },
+    matches: {
+        add: sql('./matches/add.sql'),
+        getAll: sql('./matches/getAll.sql'),
+        getById: sql('./matches/getById.sql'),
+        getByIdUser: sql('./matches/getByIdUser.sql'),
+        getByIdUsers: sql('./matches/getByIdUsers.sql'),
+        update: sql('./matches/update.sql')
     }
 };
 
