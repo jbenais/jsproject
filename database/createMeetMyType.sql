@@ -78,20 +78,21 @@ CREATE TABLE T_User_MBTI_Preferences (
 );
 
 CREATE TABLE T_User_Target (
-  Id                SERIAL          PRIMARY KEY NOT NULL,
+  Id                 SERIAL          PRIMARY KEY NOT NULL,
   Id_User            BIGINT          NOT NULL REFERENCES T_User(Id),
   Id_Target          BIGINT          NOT NULL REFERENCES T_Target(Id)
 );
 
 CREATE TABLE T_User_Picture (
   Id                SERIAL          PRIMARY KEY NOT NULL,
-  Id_User            BIGINT          NOT NULL REFERENCES T_User(Id),
+  Id_User           BIGINT          NOT NULL REFERENCES T_User(Id),
   Url               VARCHAR(256)
 );
 
 CREATE TABLE T_Matches (
   Id                SERIAL          PRIMARY KEY NOT NULL,
   Id_User            BIGINT          NOT NULL REFERENCES T_User(Id),
-  Id_UserTarget      BIGINT          NOT NULL REFERENCES T_User(Id),
-  Is_Matched         BOOLEAN         NOT NULL DEFAULT FALSE
+  Id_User_Love       BIGINT          NOT NULL REFERENCES T_User(Id),
+  Is_Matched         BOOLEAN         NOT NULL DEFAULT FALSE,
+  UNIQUE(Id_User, Id_User_Love)
 );
