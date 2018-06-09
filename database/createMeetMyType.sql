@@ -86,7 +86,9 @@ CREATE TABLE T_User_Target (
 CREATE TABLE T_User_Picture (
   Id                SERIAL          PRIMARY KEY NOT NULL,
   Id_User           BIGINT          NOT NULL REFERENCES T_User(Id),
-  Url               VARCHAR(256)
+  Url               VARCHAR(256)    ,
+  Is_Profile        BOOLEAN         NOT NULL DEFAULT FALSE,
+  UNIQUE(Id_User, Is_Profile)
 );
 
 CREATE TABLE T_Matches (
