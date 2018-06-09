@@ -6,9 +6,11 @@
   "author": "Mickael AU",
   "license": "MIT",
   "dependencies": {
+    "aws-sdk": "^2.251.1",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
+    "express-fileupload": "^0.4.0",
     "nodemon": "^1.17.5",
     "pg": "^7.4.3",
     "pg-promise": "^8.4.4"
