@@ -6,6 +6,9 @@ import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Map from './Map';
+import Slider, { Range, createSliderWithTooltip } from 'rc-slider';
+import 'rc-slider/assets/index.css';
+const SliderWithTooltip = createSliderWithTooltip(Slider);
 
 const profiles = ['ENFJ', 'ENFP', 'ENTJ', 'ENTP',
     'ESFJ', 'ESFP', 'ESTJ', 'ESTP',
@@ -21,6 +24,7 @@ export default class Profil extends React.Component {
         super(props);
         this.state = {
             userProfile: 'ENFJ',
+
         };
         this.handleChange = this.handleChange.bind(this);
     }
@@ -43,20 +47,6 @@ export default class Profil extends React.Component {
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'center', fontFamily: 'Roboto', fontWeight: 800, fontSize: '18px', paddingTop: '20px' }}>Julia BENAIS</div>
                     <div style={{ display: 'flex', justifyContent: 'center', fontFamily: 'Roboto', fontWeight: 200 }}>21 ans</div>
-                    <TextField
-                        id="select-currency-native"
-                        select
-                        label="Profil MBTI"
-                        value={this.state.profile}
-                        onChange={this.handleChange('profile')}
-                        margin="normal"
-                    >
-                        {profiles.map(option => (
-                            <option key={option} value={option}>
-                                {option}
-                            </option>
-                        ))}
-                    </TextField>
                     <Map />
                 </div>
 
@@ -149,6 +139,20 @@ export default class Profil extends React.Component {
                                     />
                                 </FormGroup>
                             </FormControl>
+                            <TextField
+                                id="select-currency-native"
+                                select
+                                label="Profil MBTI"
+                                value={this.state.profile}
+                                onChange={this.handleChange('profile')}
+                                margin="normal"
+                            >
+                                {profiles.map(option => (
+                                    <option key={option} value={option}>
+                                        {option}
+                                    </option>
+                                ))}
+                            </TextField>
                             <SliderWithTooltip min={0} max={1000} step={50} tipFormatter={valueFormatter} />
                         </div>
                     </div>

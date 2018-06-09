@@ -1,7 +1,5 @@
 import React from 'react';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps";
-import Slider, { Range, createSliderWithTooltip } from 'rc-slider';
-import 'rc-slider/assets/index.css';
 
 
 export default class Map extends React.Component {
