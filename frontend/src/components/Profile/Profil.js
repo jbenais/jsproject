@@ -7,8 +7,6 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Map from './Map';
 
-const SliderWithTooltip = createSliderWithTooltip(Slider);
-
 const profiles = ['ENFJ', 'ENFP', 'ENTJ', 'ENTP',
     'ESFJ', 'ESFP', 'ESTJ', 'ESTP',
     'INFJ', 'INFP', 'INTJ', 'INTP',
@@ -22,8 +20,7 @@ export default class Profil extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            profile: 'ENFJ',
-
+            userProfile: 'ENFJ',
         };
         this.handleChange = this.handleChange.bind(this);
     }
@@ -46,8 +43,21 @@ export default class Profil extends React.Component {
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'center', fontFamily: 'Roboto', fontWeight: 800, fontSize: '18px', paddingTop: '20px' }}>Julia BENAIS</div>
                     <div style={{ display: 'flex', justifyContent: 'center', fontFamily: 'Roboto', fontWeight: 200 }}>21 ans</div>
-                       
-                        <Map />
+                    <TextField
+                        id="select-currency-native"
+                        select
+                        label="Profil MBTI"
+                        value={this.state.profile}
+                        onChange={this.handleChange('profile')}
+                        margin="normal"
+                    >
+                        {profiles.map(option => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
+                        ))}
+                    </TextField>
+                    <Map />
                 </div>
 
 
@@ -103,8 +113,8 @@ export default class Profil extends React.Component {
                                 id="select-currency-native"
                                 select
                                 label="Profil MBTI"
-                                value={this.state.profile}
-                                onChange={this.handleChange('profile')}
+                                value={this.state.userProfile}
+                                onChange={this.handleChange('userProfile')}
                                 margin="normal"
                             >
                                 {profiles.map(option => (
@@ -139,7 +149,7 @@ export default class Profil extends React.Component {
                                     />
                                 </FormGroup>
                             </FormControl>
-                            <SliderWithTooltip min={0} max={1000} step={50} tipFormatter={valueFormatter}/>
+                            <SliderWithTooltip min={0} max={1000} step={50} tipFormatter={valueFormatter} />
                         </div>
                     </div>
                 </div>
