@@ -1,0 +1,24 @@
+#love {
+    background-image: url("./images/aboutlove.jpg");
+}
+
+#match {
+    background-image: url("./images/flame.png");
+    height: 64px;
+    width: 64px;
+}
+
+#chat {
+    background-image: url("./images/chat.png");
+    height: 64px;
+    width: 64px;
+
+}
+
+#settings {
+    background-image: url("./images/levels.png");
+    height: 64px;
+    width: 64px;
+
+}
+
