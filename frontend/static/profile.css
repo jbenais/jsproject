@@ -1,3 +1,38 @@
-img {
+#img {
     border-radius: 50%;
 }
+
+#hexagon {
+    position: relative;
+    height: 30px; 
+    width: 17.32px;
+    background-color: #FFD82F;
+    margin: 0 8.66px;
+    text-align: center;
+  }
+  
+#hexagon span{
+    font-size: 15px;
+    line-height: 30px;
+    color: white;
+  }
+  
+#hexagon:before,
+#hexagon:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+  }
+  
+#hexagon:before {
+    right: 100%;
+    border-right: 8.66px solid #FFD82F;
+  }
+  
+#hexagon:after {
+    left: 100%;
+    width: 0;
+    border-left: 8.66px solid #FFD82F;
+  }
