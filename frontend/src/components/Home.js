@@ -2,6 +2,7 @@ import React from 'react';
 import Logo from './Logo';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import IconButton from '@material-ui/core/IconButton';
 import Profil from './Profile/Profil';
 import About from './About/About';
 import Messages from './Messages/Messages';
@@ -24,20 +25,29 @@ export default class Home extends React.Component {
     };
 
     render() {
-        /* const test =  <div style={{ justifyContent: 'flex-end' }}>
-         <PowerSettingsNew />
-         </div>*/
         return (
             <div>
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    <Logo />
-                    <div style={{display: 'flex', justifyContent: 'flex-end', alignItems: 'center'}}>
-                        <PowerSettingsNew />
+                <div style={{ display: 'flex', alignItems: 'center', background: 'linear-gradient(to right, #F7798E , #F48477)', height: '100px' }}>
+                    <div style={{ margin: '0 auto' }}>
+                        <div id="logo">
+                            <div id="meet" style={{ color: 'white' }}>
+                                <b>MEET</b>
+                            </div>
+                            <div id="my">my</div>
+                            <div id="type" style={{ color: 'white' }}>
+                                <b>TYPE</b>
+                            </div>
+                        </div>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                        <IconButton aria-label="Delete">
+                            <PowerSettingsNew />
+                        </IconButton>
                     </div>
 
                 </div>
                 <Tabs value={this.state.value}
-                    style={{ padding: '30px', border: '0' }}
+                    style={{ border: '0', backgroundColor: 'white'}}
                     fullWidth={true}
                     centered={true}
                     onChange={this.handleChange}>
@@ -46,11 +56,10 @@ export default class Home extends React.Component {
                     <Tab label="Messages" />
                     <Tab label="Profil" />
                 </Tabs>
-
-                {this.state.value === 0 && <div><About /></div>}
-                {this.state.value === 1 && <div><Matches /></div>}
-                {this.state.value === 2 && <div><Messages /></div>}
-                {this.state.value === 3 && <div><Profil /></div>}
+                    {this.state.value === 0 && <About />}
+                    {this.state.value === 1 && <Matches />}
+                    {this.state.value === 2 && <Messages />}
+                    {this.state.value === 3 && <Profil />}
             </div >
 
         )
