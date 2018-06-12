@@ -39,11 +39,12 @@ export default class Profil extends React.Component {
         this.state = {
             userProfile: 'ENFJ',
             targetProfiles: [],
-            edit: true,
+            edit: false,
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleChipChange = this.handleChipChange.bind(this);
+        this.editProfile = this.editProfile.bind(this);
     }
 
     handleChange(name) {
@@ -60,6 +61,13 @@ export default class Profil extends React.Component {
         })
     }
 
+    editProfile() {
+        this.setState({
+            edit: true
+        })
+    }
+
+
     render() {
         return (
             <div style={{ display: 'flex', flexDirection: 'row', padding: '20px' }}>
@@ -75,7 +83,9 @@ export default class Profil extends React.Component {
                 <div style={{ display: 'flex', flex: 3, flexDirection: 'column', }}>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '20px' }}>
                         <div style={{}}>
+                        <Button onClick={() => this.editProfile()}>
                             <Settings />
+                        </Button>
                         </div>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap' }}>
@@ -90,28 +100,28 @@ export default class Profil extends React.Component {
                                 </div>
                             </div>
                             <TextField
-                                disabled={this.state.edit}
+                                disabled={!this.state.edit}
                                 value="Benais"
                                 id="name"
                                 label="Nom"
                                 margin="normal"
                             />
                             <TextField
-                                disabled={this.state.edit}
+                                disabled={!this.state.edit}
                                 id="name"
                                 label="Prénom"
                                 value="Julia"
                                 margin="normal"
                             />
                             <TextField
-                                disabled={this.state.edit}
+                                disabled={!this.state.edit}
                                 id="name"
                                 label="Adresse mail"
                                 value="benais.julia@gmail.com"
                                 margin="normal"
                             />
                             <TextField
-                                disabled={this.state.edit}
+                                disabled={!this.state.edit}
                                 id="name"
                                 label="Date de naissance"
                                 value="04-11-1996"
@@ -120,7 +130,7 @@ export default class Profil extends React.Component {
 
                             />
                             <TextField
-                                disabled={this.state.edit}
+                                disabled={!this.state.edit}
                                 id="multiline-flexible"
                                 label="Description"
                                 multiline
@@ -130,7 +140,7 @@ export default class Profil extends React.Component {
                             />
 
                             <TextField
-                                disabled={this.state.edit}
+                                disabled={!this.state.edit}
                                 id="name"
                                 select
                                 label="Profil MBTI"
@@ -161,6 +171,7 @@ export default class Profil extends React.Component {
                                     <FormControlLabel
                                         control={
                                             <Checkbox
+                                                disabled={!this.state.edit}
                                                 onChange={this.handleChange}
                                                 value="Femme"
                                             />
@@ -170,6 +181,7 @@ export default class Profil extends React.Component {
                                     <FormControlLabel
                                         control={
                                             <Checkbox
+                                                disabled={!this.state.edit}
                                                 onChange={this.handleChange}
                                                 value="Homme"
                                             />}
@@ -180,7 +192,7 @@ export default class Profil extends React.Component {
                             <div style={{ display: 'flex', fontFamily: 'Roboto', color: "#757575", fontWeight: 400, paddingTop: '20px', paddingBottom: '40px' }}>
                                 Maximum Distance
                             </div>
-                            <SliderWithTooltip style={{ marginBottom: '20px' }} min={0} max={1000} step={50} tipProps={{ visible: true }} tipFormatter={valueFormatter} />
+                            <SliderWithTooltip style={{ marginBottom: '20px' }} min={0} max={1000} step={50} tipProps={{ visible: true }} disabled={!this.state.edit} tipFormatter={valueFormatter} />
 
 
 
@@ -188,6 +200,7 @@ export default class Profil extends React.Component {
                                 <InputLabel htmlFor="select-multiple-chip">Préférences MBTI</InputLabel>
                                 <Select
                                     multiple
+                                    disabled={!this.state.edit}
                                     value={this.state.targetProfiles}
                                     onChange={this.handleChipChange}
                                     input={<Input id="select-multiple-chip" />}
@@ -210,6 +223,7 @@ export default class Profil extends React.Component {
                                 Age Range
                             </div>
                             <RangewithTooltip
+                                disabled={!this.state.edit}
                                 allowCross={false}
                                 count={2} min={18}
                                 max={55} step={1}
@@ -221,10 +235,12 @@ export default class Profil extends React.Component {
 
                         </div>
                     </div>
-                    <Button
-                        variant="contained"
-                        style={{ visibility: (this.state.edit ? 'visible' : 'hidden'), fontFamily: 'Roboto', color: 'white', backgroundColor: '#01D2CB', borderRadius: '20px', fontSize: '18px', letterSpacing: '1px', marginTop: '30px' }}
-                    >VALIDER</Button>
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <Button
+                            variant="contained"
+                            style={{ visibility: (this.state.edit ? 'visible' : 'hidden'), width: '400px', fontFamily: 'Roboto', color: 'white', backgroundColor: '#01D2CB', borderRadius: '20px', fontSize: '18px', letterSpacing: '1px', margin: '30px' }}
+                        >VALIDER</Button>
+                    </div>
                 </div>
             </div>
         )
