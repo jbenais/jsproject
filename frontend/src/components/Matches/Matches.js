@@ -4,55 +4,12 @@ import Dislike from '@material-ui/icons/ThumbDown';
 import Button from '@material-ui/core/Button';
 import Event from '@material-ui/icons/Event';
 import LocationOn from '@material-ui/icons/LocationOn';
+import Work from '@material-ui/icons/Work';
 export default class Matches extends React.Component {
     constructor(props) {
         super(props);
     }
-    /* <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', width: '40%', height: '80%', paddingTop: '30px', backgroundColor: 'white', justifyContent: 'space-evenly' }}>
-                        <div style={{dislay: 'flex', flexDirection: 'row'}}>
-                            <div style={{ display: 'flex', paddingTop: '10px', }}>
-                                <img id="img" width="100px" height="100px" src="https://picsum.photos/200/200" />
-                            </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                                <div style={{ display: 'flex', fontFamily: 'Roboto', fontWeight: 500, fontSize: '20px', color: '#55545E' }}>
-                                    Julia
-                                    </div>
-                                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                    <div style={{ display: 'flex' }}>
-                                        <Event /> &nbsp; 21 ans
-                                        </div>
-                                    <div style={{ display: 'flex' }}>
-                                        <LocationOn /> &nbsp; Paris
-                                        </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', }}>
-                            <div style={{ display: 'flex', }}>
-                                Julia
-                                </div>
-                            <div style={{ display: 'flex', }}>
-                                Jfdguj
-                                </div>
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-evenly', marginTop: '20px' }}>
-                            <Button variant="fab" style={{ color: '#FF5D65', backgroundColor: 'white', boxShadow: 'none' }} aria-label="add">
-                                <Dislike />
-                            </Button>
-                            <Button variant="fab" style={{ color: '#22D894', backgroundColor: 'white', boxShadow: 'none' }} aria-label="add">
-                                <Favorite />
-                            </Button>
-                        </div>
-                        <div style={{ display: 'flex' }}>
-                            <div style={{ display: 'flex', flexDirection: 'row' }}>
-    
-                            </div>
-                        </div>
-                    </div>
-                </div>
-    
-                */
+
     render() {
         return (
             <div style={{ display: 'flex', height: '100vh' }}>
@@ -62,7 +19,7 @@ export default class Matches extends React.Component {
                             <div style={{ display: 'flex', paddingTop: '10px', }}>
                                 <img id="img" width="150px" height="150px" src="https://picsum.photos/200/200" />
                             </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '20px' }}>
                                 <div style={{ display: 'flex', fontFamily: 'Roboto', fontWeight: 500, fontSize: '20px', color: '#55545E' }}>
                                     Julia
                                 </div>
@@ -73,6 +30,9 @@ export default class Matches extends React.Component {
                                     <div style={{ display: 'flex' }}>
                                         <LocationOn /> &nbsp; Paris
                                         </div>
+                                </div>
+                                <div style={{display: 'flex', padding: '20px'}}>
+                                    <Work/> &nbsp; Étudiante
                                 </div>
                             </div>
                         </div>
