@@ -14,26 +14,31 @@ class Login extends React.Component {
         };
 
         this.responseGoogle = this.responseGoogle.bind(this);
-        this.signUp = this.signUp.bind(this);
+        //this.signUp = this.signUp.bind(this);
     }
 
-    responseGoogle(googleUser) {
-        var id_token = googleUser.getAuthResponse().id_token;
+    /* responseGoogle = (response) => {
+        //var id_token = r.getAuthResponse().id_token;
         var googleId = googleUser.getId();
         //console.log(googleUser);
         //console.log({ googleId });
-        console.log({ accessToken: id_token });
+        //console.log({ accessToken: id_token });
         fetch('http://localhost:8888/user', {
                 method: 'post',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Access-Control-Allow-Origin': '*', 
+                    'Content-Type': 'application/json' 
+                },
                 body: {
                     "access_token": id_token,
                     "is_google": true
                 }
+        }).then((response) => {
+            console.log(response);
         });
         //this.signUp(googleUser.getAuthResponse);
         //anything else you want to do(save to localStorage)...
-    }
+}*/
 
     signUp(res) {
         /*let baseUrl = 'http://localhost:8888/user';
@@ -50,6 +55,22 @@ class Login extends React.Component {
                 console.log(error);
             }) 
         })*/
+    }
+
+    responseGoogle(response) {
+        fetch('http://localhost:8888/user', {
+                method: 'post',
+                headers: {
+                    'Access-Control-Allow-Origin': '*', 
+                    'Content-Type': 'application/json' 
+                },
+                body: {
+                    "access_token": response.access_token,
+                    "is_google": true
+                }
+        }).then((response) => {
+            console.log(response);
+        });
     }
 
 
@@ -112,9 +133,10 @@ class Login extends React.Component {
                                 }}
                                 clientId="858362894339-vvqqtpnjnnkqu4klhsv9ob4memvtkkr1.apps.googleusercontent.com"
                                 className="google-login"
-                                scope="profile"
+                                scope="profile email"
                                 fetchBasicProfile={false}
                                 onSuccess={this.responseGoogle}
+                                onFailure={this.responseGoogle}
                                 buttonText="CONNEXION AVEC GOOGLE" />
                         </div>
                     </div>
