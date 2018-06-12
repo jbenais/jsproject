@@ -24,7 +24,8 @@ module.exports = {
     },
     users: {
         add: sql('./users/add.sql'),
-        getAll: sql('./users/getAll.sql')
+        getAll: sql('./users/getAll.sql'),
+        getByEmail: sql('./users/getByEmail.sql')
     },
     userPreferences: {
         add: sql('./userPreferences/add.sql'),
@@ -47,6 +48,10 @@ module.exports = {
         getByIdUser: sql('./matches/getByIdUser.sql'),
         getByIdUsers: sql('./matches/getByIdUsers.sql'),
         update: sql('./matches/update.sql')
+    },
+    userPicture:{
+        add: sql('./userPicture/add.sql'),
+        getByIdUser: sql('./userPicture/getByIdUser.sql'),
     }
 };
 

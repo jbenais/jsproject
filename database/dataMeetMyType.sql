@@ -33,9 +33,6 @@ ALTER SEQUENCE t_mbti_id_seq RESTART WITH 1;
 DELETE FROM t_orientation CASCADE;
 ALTER SEQUENCE t_orientation_id_seq RESTART WITH 1;
 
-DELETE FROM t_profession CASCADE;
-ALTER SEQUENCE t_profession_id_seq RESTART WITH 1;
-
 DELETE FROM t_strength CASCADE;
 ALTER SEQUENCE t_strength_id_seq RESTART WITH 1;
 
@@ -71,6 +68,3 @@ INSERT INTO t_target
          (DEFAULT, 'Friends with benefits'),
          (DEFAULT, 'Friends'),
          (DEFAULT, 'Work buddy ');
-
-INSERT INTO t_profession
-  VALUES (DEFAULT, 'Student');

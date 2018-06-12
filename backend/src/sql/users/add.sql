@@ -1,3 +1,3 @@
-INSERT INTO t_user(email, firstname, lastname, age, is_male)
-VALUES (${email}, ${firstname}, ${lastname}, ${age}, ${is_male})
+INSERT INTO t_user(email, firstname, lastname)
+VALUES (${email}, ${firstname}, ${lastname})
 RETURNING *
