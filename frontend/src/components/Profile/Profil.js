@@ -25,6 +25,7 @@ const profiles = ['ENFJ', 'ENFP', 'ENTJ', 'ENTP',
     'INFJ', 'INFP', 'INTJ', 'INTP',
     'ISFJ', 'ISFP', 'ISTJ', 'ISTP']
 
+const genders = ['Femme', 'Homme']
 function valueFormatter(v) {
     return `${v} km`;
 }
@@ -40,9 +41,11 @@ export default class Profil extends React.Component {
             userProfile: 'ENFJ',
             targetProfiles: [],
             edit: false,
+            gender: 'Femme'
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleGenderChange = this.handleGenderChange.bind(this);
         this.handleChipChange = this.handleChipChange.bind(this);
         this.editProfile = this.editProfile.bind(this);
         this.handleEditProfile = this.handleEditProfile.bind(this);
@@ -62,6 +65,11 @@ export default class Profil extends React.Component {
         })
     }
 
+    handleGenderChange(event) {
+        this.setState({
+            gender: event.target.value
+        })
+    }
     editProfile() {
         this.setState({
             edit: true
@@ -90,9 +98,9 @@ export default class Profil extends React.Component {
                 <div style={{ display: 'flex', flex: 3, flexDirection: 'column', }}>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '20px' }}>
                         <div style={{}}>
-                        <Button onClick={() => this.editProfile()}>
-                            <Settings />
-                        </Button>
+                            <Button onClick={() => this.editProfile()}>
+                                <Settings />
+                            </Button>
                         </div>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap' }}>
@@ -128,6 +136,21 @@ export default class Profil extends React.Component {
                                 margin="normal"
                             />
                             <TextField
+                                id="select-gender-native"
+                                select
+                                label="Sexe"
+                                value={this.state.gender}
+                                onChange={this.handleGenderChange}
+                                margin="normal"
+                            >
+                                {genders.map(option => (
+                                    <option key={option} value={option}>
+                                        {option}
+                                    </option>
+                                ))}
+                            </TextField>
+
+                            <TextField
                                 disabled={!this.state.edit}
                                 id="name"
                                 label="Date de naissance"
@@ -135,6 +158,13 @@ export default class Profil extends React.Component {
                                 type="date"
                                 margin="normal"
 
+                            />
+                            <TextField
+                                disabled={!this.state.edit}
+                                id="name"
+                                label="Profession"
+                                value="Étudiante"
+                                margin="normal"
                             />
                             <TextField
                                 disabled={!this.state.edit}
@@ -178,7 +208,7 @@ export default class Profil extends React.Component {
                                     <FormControlLabel
                                         control={
                                             <Checkbox
-                                                style={{color: '#01D2CB'}}
+                                                style={{ color: '#01D2CB' }}
                                                 disabled={!this.state.edit}
                                                 onChange={this.handleChange}
                                                 value="Femme"
@@ -189,7 +219,7 @@ export default class Profil extends React.Component {
                                     <FormControlLabel
                                         control={
                                             <Checkbox
-                                                style={{color: '#01D2CB'}}
+                                                style={{ color: '#01D2CB' }}
                                                 disabled={!this.state.edit}
                                                 onChange={this.handleChange}
                                                 value="Homme"
@@ -242,7 +272,7 @@ export default class Profil extends React.Component {
 
                         </div>
                     </div>
-                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <Button
                             onClick={() => this.handleEditProfile()}
                             variant="contained"
