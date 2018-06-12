@@ -72,12 +72,15 @@ export default class Profil extends React.Component {
                     <Map />
                 </div>
 
-                <div style={{ display: 'flex', flex: 3, flexDirection: 'column', paddingTop: '20px' }}>
+                <div style={{ display: 'flex', flex: 3, flexDirection: 'column',}}>
+                    <div style={{display: 'flex', justifyContent: 'flex-end', padding: '20px'}}>
+                        <div style={{}}>
+                            <Settings/>
+                        </div>
+                    </div>
                     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap' }}>
                         <div style={{ display: 'flex', backgroundColor: 'white', flexDirection: 'column', padding: '20px', width: '45%' }}>
-                            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                <Settings />
-                            </div>
+                           
                             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
                                 <div id="hexagon">
                                     <span>✓</span>
@@ -152,9 +155,6 @@ export default class Profil extends React.Component {
 
 
                         <div style={{ display: 'flex', backgroundColor: 'white', flexDirection: 'column', padding: '20px', width: '45%', }}>
-                            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                <Settings />
-                            </div>
                             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: '30px'}}>
                                 <div id="hexagon">
                                     <span>✓</span>
