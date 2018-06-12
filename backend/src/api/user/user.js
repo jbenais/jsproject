@@ -29,50 +29,26 @@ function getAllUser(req, res, next) {
 
 function postUser(req, res, next) {
     const user = req.body.user_general;
-    const address = req.body.user_address;
     db.one(sqlUser.add, user)
-        .then(user_general => {
-            postAddress(res, user_general, address.latitude, address.longitude)
-        })
-        .catch(error => {
-            res.status(400)
-                .json({
-                    status: 400,
-                    data: { error },
-                    message: error.message
-                });
-        });
-}
-
-function postAddress(res, user_general, latitude, longitude) {
-    const address = {
-        id_user: user_general.id,
-        latitude: latitude,
-        longitude: longitude
-    }
-    db.one(sqlAddress.add, address)
         .then(data => {
-            res.status(200)
+            const status = 200;
+            res.status(status)
                 .json({
-                    status: 200,
-                    data: {
-                        user_general: user_general,
-                        user_address: data
-                    },
+                    status: status,
+                    data: data,
                     message: MESSAGE_OK
                 });
         })
         .catch(error => {
-            res.status(400)
+            const status = 403;
+            res.status(403)
                 .json({
-                    status: 400,
+                    status: 403,
                     data: { error },
                     message: error.message
                 });
         });
 }
-
-
 
 module.exports = {
     getAllUser,

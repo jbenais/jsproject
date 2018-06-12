@@ -1,6 +1,3 @@
-INSERT INTO t_user(email, firstname, lastname, password, age, is_male, description, id_profession, id_mbti, id_orientation)
-VALUES (${email}, ${firstname}, ${lastname},
-        ${password}, ${age}, ${is_male}, 
-        ${description}, ${id_profession}, 
-        ${id_mbti}, ${id_orientation})
+INSERT INTO t_user(email, firstname, lastname, age, is_male)
+VALUES (${email}, ${firstname}, ${lastname}, ${age}, ${is_male})
 RETURNING *
