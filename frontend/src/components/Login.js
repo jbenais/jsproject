@@ -3,7 +3,7 @@ import Logo from './Logo';
 import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login';
 import * as LoginAction from '../actions/LoginAction';
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import { resolve } from 'path';
 
 class Login extends React.Component {
@@ -20,9 +20,17 @@ class Login extends React.Component {
     responseGoogle(googleUser) {
         var id_token = googleUser.getAuthResponse().id_token;
         var googleId = googleUser.getId();
-        console.log(googleUser);
-        console.log({ googleId });
+        //console.log(googleUser);
+        //console.log({ googleId });
         console.log({ accessToken: id_token });
+        fetch('http://localhost:8888/user', {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: {
+                    "access_token": id_token,
+                    "is_google": true
+                }
+        });
         //this.signUp(googleUser.getAuthResponse);
         //anything else you want to do(save to localStorage)...
     }
@@ -55,7 +63,14 @@ class Login extends React.Component {
                 name: response.name
             };
             this.props.login(state);
-            this.signUp(response);
+            fetch('http://localhost:8888/user', {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: {
+                    "access_token": state.access_token,
+                    "is_google": false
+                }
+            });
         }
 
         return (
@@ -68,8 +83,8 @@ class Login extends React.Component {
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
                             <Logo />
                         </div>
-                        <div style={{display: 'flex', fontFamily: 'Roboto', fontWeight: 400, fontSize: '20px', justifyContent: 'center', paddingTop: '30px', textAlign: 'center'}}>
-                           Trouver l'amour selon son profil&nbsp; <b>MBTI</b>
+                        <div style={{ display: 'flex', fontFamily: 'Roboto', fontWeight: 400, fontSize: '20px', justifyContent: 'center', paddingTop: '30px', textAlign: 'center' }}>
+                            Trouver l'amour selon son profil&nbsp; <b>MBTI</b>
                         </div>
                         <div id="fb">
                             <div style={{ width: '75%' }}>
@@ -110,16 +125,16 @@ class Login extends React.Component {
 };
 const mapStateToProps = (state) => {
     return {
-      ...state.loginReducer,
+        ...state.loginReducer,
     };
-  };
-  
-  const mapDispatchToProps = (dispatch) => {
+};
+
+const mapDispatchToProps = (dispatch) => {
     return {
-      login: (response) => {
-        dispatch(LoginAction.login(response));
-      },
+        login: (response) => {
+            dispatch(LoginAction.login(response));
+        },
     };
-  };
-  
-  export default connect(mapStateToProps, mapDispatchToProps)(Login);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

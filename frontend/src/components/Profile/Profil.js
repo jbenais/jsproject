@@ -72,15 +72,15 @@ export default class Profil extends React.Component {
                     <Map />
                 </div>
 
-                <div style={{ display: 'flex', flex: 3, flexDirection: 'column',}}>
-                    <div style={{display: 'flex', justifyContent: 'flex-end', padding: '20px'}}>
+                <div style={{ display: 'flex', flex: 3, flexDirection: 'column', }}>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '20px' }}>
                         <div style={{}}>
-                            <Settings/>
+                            <Settings />
                         </div>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap' }}>
                         <div style={{ display: 'flex', backgroundColor: 'white', flexDirection: 'column', padding: '20px', width: '45%' }}>
-                           
+
                             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
                                 <div id="hexagon">
                                     <span>✓</span>
@@ -144,18 +144,10 @@ export default class Profil extends React.Component {
                                     </option>
                                 ))}
                             </TextField>
-                            <Button
-                                variant="contained"
-                                style={{ visibility: (this.state.edit ? 'visible' : 'hidden'), fontFamily: 'Roboto', color: 'white', backgroundColor: '#01D2CB', borderRadius: '20px', fontSize: '18px', letterSpacing: '1px', marginTop: '30px' }}
-                            >VALIDER</Button>
                         </div>
 
-
-
-
-
                         <div style={{ display: 'flex', backgroundColor: 'white', flexDirection: 'column', padding: '20px', width: '45%', }}>
-                            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: '30px'}}>
+                            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', marginBottom: '30px' }}>
                                 <div id="hexagon">
                                     <span>✓</span>
                                 </div>
@@ -188,11 +180,11 @@ export default class Profil extends React.Component {
                             <div style={{ display: 'flex', fontFamily: 'Roboto', color: "#757575", fontWeight: 400, paddingTop: '20px', paddingBottom: '40px' }}>
                                 Maximum Distance
                             </div>
-                            <SliderWithTooltip style={{marginBottom: '20px'}} min={0} max={1000} step={50} tipProps={{ visible: true }} tipFormatter={valueFormatter} />
+                            <SliderWithTooltip style={{ marginBottom: '20px' }} min={0} max={1000} step={50} tipProps={{ visible: true }} tipFormatter={valueFormatter} />
 
 
 
-                            <FormControl style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '20px'}}>
+                            <FormControl style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '20px' }}>
                                 <InputLabel htmlFor="select-multiple-chip">Préférences MBTI</InputLabel>
                                 <Select
                                     multiple
@@ -224,15 +216,15 @@ export default class Profil extends React.Component {
                                 defaultValue={[18, 25]}
                                 tipFormatter={ageFormatter}
                                 tipProps={{ visible: true }}
-                                style={{marginBottom: '20px'}}
+                                style={{ marginBottom: '20px' }}
                             />
-                            <Button
-                                variant="contained"
-                                style={{ visibility: (this.state.edit ? 'visible' : 'hidden'), fontFamily: 'Roboto', color: 'white', backgroundColor: '#01D2CB', borderRadius: '20px', fontSize: '18px', letterSpacing: '1px', marginTop: '30px' }}
-                            >VALIDER</Button>
+
                         </div>
                     </div>
-
+                    <Button
+                        variant="contained"
+                        style={{ visibility: (this.state.edit ? 'visible' : 'hidden'), fontFamily: 'Roboto', color: 'white', backgroundColor: '#01D2CB', borderRadius: '20px', fontSize: '18px', letterSpacing: '1px', marginTop: '30px' }}
+                    >VALIDER</Button>
                 </div>
             </div>
         )
