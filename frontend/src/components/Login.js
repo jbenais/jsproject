@@ -2,9 +2,11 @@ import React from 'react';
 import Logo from './Logo';
 import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login';
+import * as LoginAction from '../actions/LoginAction';
+import {connect} from "react-redux";
 import { resolve } from 'path';
 
-export default class Login extends React.Component {
+class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -19,8 +21,8 @@ export default class Login extends React.Component {
         var id_token = googleUser.getAuthResponse().id_token;
         var googleId = googleUser.getId();
 
-        console.log({ googleId });
-        console.log({ accessToken: id_token });
+        //console.log({ googleId });
+        //console.log({ accessToken: id_token });
         this.signUp(googleUser.getAuthResponse);
         //anything else you want to do(save to localStorage)...
     }
@@ -46,6 +48,13 @@ export default class Login extends React.Component {
     render() {
         const responseFacebook = (response) => {
             console.log(response);
+            let state = {
+                login: '',
+                token: response.accessToken,
+                email: response.email,
+                name: response.name
+            };
+            this.props.login(state);
             this.signUp(response);
         }
 
@@ -58,6 +67,9 @@ export default class Login extends React.Component {
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
                             <Logo />
+                        </div>
+                        <div style={{display: 'flex', fontFamily: 'Roboto', fontWeight: 400, fontSize: '20px', justifyContent: 'center', paddingTop: '30px', textAlign: 'center'}}>
+                           Trouver l'amour selon son profil&nbsp; <b>MBTI</b>
                         </div>
                         <div id="fb">
                             <div style={{ width: '75%' }}>
@@ -90,14 +102,27 @@ export default class Login extends React.Component {
                                 onSuccess={this.responseGoogle}
                                 buttonText="CONNEXION AVEC GOOGLE" />
                         </div>
-                        <div id="buttonstyle">
-                            <button type="button" onClick={this.props.onLogin} className="btn btn-link btn-lg">
-                                Mot de passe oublié ?
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
         )
     }
 };
+const mapStateToProps = (state) => {
+    return {
+      ...state.loginReducer,
+    };
+  };
+  
+  const mapDispatchToProps = (dispatch) => {
+    return {
+      login: (response) => {
+        dispatch(LoginAction.login(response));
+      },
+      logout: () => {
+        dispatch(LoginAction.logout());
+      },
+    };
+  };
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(Login);

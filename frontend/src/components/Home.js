@@ -8,12 +8,13 @@ import About from './About/About';
 import Messages from './Messages/Messages';
 import Matches from './Matches/Matches';
 import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
+import {connect} from "react-redux";
 
-export default class Home extends React.Component {
+class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: 0,
+            value: 3,
         };
         this.handleChange = this.handleChange.bind(this);
     };
@@ -39,8 +40,9 @@ export default class Home extends React.Component {
                             </div>
                         </div>
                     </div>
+                    <p>{this.props.loginReducer.name}</p>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                        <IconButton aria-label="Delete">
+                        <IconButton aria-label="Delete" onClick={this.props.onLogout}>
                             <PowerSettingsNew />
                         </IconButton>
                     </div>
@@ -65,3 +67,11 @@ export default class Home extends React.Component {
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+      loginReducer: state.loginReducer
+    };
+  };
+
+  export default connect(mapStateToProps)(Home);
