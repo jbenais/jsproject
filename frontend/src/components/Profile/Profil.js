@@ -45,6 +45,7 @@ export default class Profil extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleChipChange = this.handleChipChange.bind(this);
         this.editProfile = this.editProfile.bind(this);
+        this.handleEditProfile = this.handleEditProfile.bind(this);
     }
 
     handleChange(name) {
@@ -64,6 +65,12 @@ export default class Profil extends React.Component {
     editProfile() {
         this.setState({
             edit: true
+        })
+    }
+
+    handleEditProfile() {
+        this.setState({
+            edit: false
         })
     }
 
@@ -171,6 +178,7 @@ export default class Profil extends React.Component {
                                     <FormControlLabel
                                         control={
                                             <Checkbox
+                                                style={{color: '#01D2CB'}}
                                                 disabled={!this.state.edit}
                                                 onChange={this.handleChange}
                                                 value="Femme"
@@ -181,6 +189,7 @@ export default class Profil extends React.Component {
                                     <FormControlLabel
                                         control={
                                             <Checkbox
+                                                style={{color: '#01D2CB'}}
                                                 disabled={!this.state.edit}
                                                 onChange={this.handleChange}
                                                 value="Homme"
@@ -193,8 +202,6 @@ export default class Profil extends React.Component {
                                 Maximum Distance
                             </div>
                             <SliderWithTooltip style={{ marginBottom: '20px' }} min={0} max={1000} step={50} tipProps={{ visible: true }} disabled={!this.state.edit} tipFormatter={valueFormatter} />
-
-
 
                             <FormControl style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '20px' }}>
                                 <InputLabel htmlFor="select-multiple-chip">Préférences MBTI</InputLabel>
@@ -237,6 +244,7 @@ export default class Profil extends React.Component {
                     </div>
                     <div style={{display: 'flex', justifyContent: 'center'}}>
                         <Button
+                            onClick={() => this.handleEditProfile()}
                             variant="contained"
                             style={{ visibility: (this.state.edit ? 'visible' : 'hidden'), width: '400px', fontFamily: 'Roboto', color: 'white', backgroundColor: '#01D2CB', borderRadius: '20px', fontSize: '18px', letterSpacing: '1px', margin: '30px' }}
                         >VALIDER</Button>
