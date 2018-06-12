@@ -74,4 +74,12 @@ const mapStateToProps = (state) => {
     };
   };
 
-  export default connect(mapStateToProps)(Home);
+  const mapDispatchToProps = (dispatch) => {
+    return {
+      logout: () => {
+        dispatch(LoginAction.logout());
+      },
+    };
+  };
+
+  export default connect(mapStateToProps, mapDispatchToProps)(Home);
