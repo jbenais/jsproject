@@ -14,6 +14,8 @@ class Login extends React.Component {
         };
 
         this.responseGoogle = this.responseGoogle.bind(this);
+        // this.responseFacebook = this.responseFacebook.bind(this)
+        this.failureGoogle = this.failureGoogle.bind(this)
         //this.signUp = this.signUp.bind(this);
     }
 
@@ -58,42 +60,51 @@ class Login extends React.Component {
     }
 
     responseGoogle(response) {
+        console.log("GOOOOOOOOOOOOOOOOOOOGLE");
+        console.log(response);
         fetch('http://localhost:8888/user', {
-                method: 'post',
+                method: 'POST',
                 headers: {
-                    'Access-Control-Allow-Origin': '*', 
-                    'Content-Type': 'application/json' 
+                    'ACCEPT': 'application/json, text/plain, */*',
+                    'Content-type': 'application/json'
                 },
-                body: {
-                    "access_token": response.access_token,
-                    "is_google": true
-                }
+                body: JSON.stringify({
+                    access_token: response.access_token,
+                    is_google: true
+                })
         }).then((response) => {
-            console.log(response);
+            console.log(response.access_token);
+        });
+    }
+
+    failureGoogle(){
+        console.log("Google failed");
+    }
+
+    responseFacebook(response){
+        console.log(response);
+        let state = {
+            login: '',
+            token: response.accessToken,
+            email: response.email,
+            name: response.name
+        };
+        this.props.login(state);
+        fetch('http://localhost:8888/user', {
+            method: 'POST',
+            headers: {
+                'ACCEPT': 'application/json, text/plain, */*',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                access_token: response.accessToken,
+                is_google: false
+            })
         });
     }
 
 
     render() {
-        const responseFacebook = (response) => {
-            console.log(response);
-            let state = {
-                login: '',
-                token: response.accessToken,
-                email: response.email,
-                name: response.name
-            };
-            this.props.login(state);
-            fetch('http://localhost:8888/user', {
-                method: 'post',
-                headers: { 'Content-Type': 'application/json' },
-                body: {
-                    "access_token": state.access_token,
-                    "is_google": false
-                }
-            });
-        }
-
         return (
             <div id="content">
                 <div style={{ display: 'flex', justifyContent: 'center', height: '-webkit-fill-available' }}>
@@ -119,7 +130,7 @@ class Login extends React.Component {
                                     scope="public_profile, email, user_birthday"
                                     fields="name,email,picture, birthday, gender"
                                     onClick={this.props.onLogin}
-                                    callback={responseFacebook} />
+                                    callback={this.responseFacebook.bind(this)} />
                             </div>
                         </div>
                         <div id="or">
@@ -136,7 +147,7 @@ class Login extends React.Component {
                                 scope="profile email"
                                 fetchBasicProfile={false}
                                 onSuccess={this.responseGoogle}
-                                onFailure={this.responseGoogle}
+                                onFailure={this.failureGoogle}
                                 buttonText="CONNEXION AVEC GOOGLE" />
                         </div>
                     </div>
