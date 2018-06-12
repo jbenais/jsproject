@@ -11,13 +11,20 @@ class App extends React.Component {
         };
     };
 
-    updateLogin() {
+    login() {
         this.setState ({
             login: true
         })
     }
+
+    logout() {
+        this.setState ({
+            login: false
+        })
+    }
+    
     render() {
-        var content = !this.state.login ? <Login onLogin={() => this.updateLogin()} /> : <Home/>
+        var content = !this.state.login ? <Login onLogin={() => this.login()} /> : <Home onLogout={() => this.logout()}/>
         return (
             <div>
                 {content}
