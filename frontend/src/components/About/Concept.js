@@ -14,7 +14,7 @@ export default class Concept extends React.Component {
                 </div>
                 <div style={{ display: 'flex', width: '45%', margin: '30px' }}>
                     <div style={{ display: 'flex', fontFamily: 'Roboto', flexDirection: 'column', justifyContent: 'center', padding: '50px' }}>
-                        <div style={{ fontSize: '40px', fontWeight: 800, paddingBottom: '30px' }}>
+                        <div style={{ fontSize: '40px', fontWeight: 800, paddingBottom: '30px', textAlign: 'center' }}>
                             LE CONCEPT
                             </div>
                         <div style={{ fontSize: '20px', textAlign: 'center', fontWeight: 300, paddingBottom: '30px' }}>
