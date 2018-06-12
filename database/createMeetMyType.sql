@@ -48,11 +48,11 @@ CREATE TABLE T_User (
   Email             VARCHAR(64)     UNIQUE NOT NULL,
   Firstname         VARCHAR(64)     NOT NULL,
   Lastname          VARCHAR(64)     NOT NULL,
-  Age               SMALLINT        NOT NULL,
-  Is_Male           BOOLEAN         NOT NULL DEFAULT TRUE,
+  Age               DATE            ,
+  Is_Male           BOOLEAN         ,
   Description       VARCHAR(512)    , 
-  Id_MBTI            BIGINT         REFERENCES T_MBTI(Id),
-  Id_Orientation     BIGINT         REFERENCES T_Orientation(Id)
+  Id_MBTI           BIGINT          REFERENCES T_MBTI(Id),
+  Id_Orientation    BIGINT          REFERENCES T_Orientation(Id)
 );
 
 
