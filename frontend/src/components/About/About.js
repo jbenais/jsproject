@@ -23,9 +23,6 @@ export default class About extends React.Component {
                    <UsersOpinion/>
                 </div>
             </div >
-
-
-
         )
     }
 }
