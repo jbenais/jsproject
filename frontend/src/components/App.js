@@ -2,6 +2,7 @@ import React from 'react';
 import { hot } from 'react-hot-loader';
 import Login from './Login';
 import Home from './Home';
+import {connect} from "react-redux";
 
 class App extends React.Component {
     constructor(props) {
@@ -24,7 +25,7 @@ class App extends React.Component {
     }
     
     render() {
-        var content = !this.state.login ? <Login onLogin={() => this.login()} /> : <Home onLogout={() => this.logout()}/>
+        var content = !this.props.loginReducer.is_logged ? <Login /> : <Home />
         return (
             <div>
                 {content}
@@ -32,6 +33,11 @@ class App extends React.Component {
         )
     }
 }
+const mapStateToProps = (state) => {
+    return {
+      loginReducer: state.loginReducer
+    };
+  };
 
 
-export default hot(module)(App)
+export default connect(mapStateToProps)(App);

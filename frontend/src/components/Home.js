@@ -1,5 +1,5 @@
 import React from 'react';
-import Logo from './Logo';
+import * as LoginAction from '../actions/LoginAction';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import IconButton from '@material-ui/core/IconButton';
@@ -42,7 +42,7 @@ class Home extends React.Component {
                     </div>
                     <p>{this.props.loginReducer.user_general.firstname}</p>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                        <IconButton aria-label="Delete" onClick={this.props.onLogout}>
+                        <IconButton aria-label="Delete" onClick={this.props.logout}>
                             <PowerSettingsNew />
                         </IconButton>
                     </div>

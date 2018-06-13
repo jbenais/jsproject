@@ -11,7 +11,8 @@ export function login(res) {
 				},
 				body: JSON.stringify({
 					data: {
-						access_token: res.access_token
+						access_token: res.access_token,
+						email: res.email
 					},
 					is_google: res.is_google
 				})

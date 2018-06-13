@@ -23,7 +23,8 @@ const initialState = {
     ],
     user_address: null,
     user_preference: [],
-    user_target: []
+    user_target: [],
+    is_logged : false,
    
 };
 
@@ -38,6 +39,7 @@ const loginReducer = (state = initialState, action) => {
                 user_address: action.payload.user_address,
                 user_preference: action.payload.user_preference,
                 user_target: action.payload.user_target,
+                is_logged: true,
 			};
 		break;
         
