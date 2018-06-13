@@ -19,30 +19,26 @@ class Login extends React.Component {
 
     responseGoogle(response) {
         console.log(response);
-
-        fetch('http://localhost:8888/user', {
-            method: 'POST',
-            headers: {
-                'ACCEPT': 'application/json, text/plain, */*',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                data: {
-                    google_id: response.profileObj.googleId,
-                    email: response.profileObj.email
-                },
-                is_google: true
-            })
-        })
+        let data = {
+            access_token: response.profileObj.googleId,
+            email: response.profileObj.email,
+            is_google: true,
+        }
+        this.props.login(data);
     }
 
     responseFacebook(response) {
         console.log(response);
-        let data = {
-            access_token: response.accessToken,
-            is_google: false
-        };
-        this.props.login(data);
+        if (!response.status) {
+            let data = {
+                access_token: response.accessToken,
+                is_google: false
+            };
+            this.props.login(data);
+            //this.props.onLogin
+
+        }
+        
     }
 
     render() {
@@ -67,10 +63,9 @@ class Login extends React.Component {
                                     textButton="CONNEXION AVEC FACEBOOK"
                                     appId="1070554803153257"
                                     autoLoad={true}
-                                    cookie={true}
+                                    //cookie={true}
                                     scope="public_profile, email, user_birthday"
                                     fields="name,email,picture, birthday, gender"
-                                    onClick={this.props.onLogin}
                                     callback={this.responseFacebook.bind(this)} />
                             </div>
                         </div>
