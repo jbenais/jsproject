@@ -21,7 +21,8 @@
     "rc-slider": "^8.6.1",
     "react-google-maps": "^9.4.5",
     "react-redux": "^5.0.7",
-    "redux": "^4.0.0"
+    "redux": "^4.0.0",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "start": "./node_modules/.bin/webpack-dev-server --hot --config ./config/webpack/server.js",

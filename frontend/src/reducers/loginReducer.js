@@ -1,23 +1,32 @@
 const initialState = {
-    login: '',
-    token: '',
+    id: 0,
     email: '',
-    name: '',
-    isLogin: false,
+    firstname: '',
+    lastname: '',
+    age: null,
+    is_male: null,
+    description: null,
+    id_mbti: null,
+    id_orientation: null
 };
 
 
 
 const loginReducer = (state = initialState, action) => {
+    console.log(action.payload);
 	switch (action.type) {
 		case 'LOGIN':
 			state = {
                 ...state,
-                login: action.payload.login,
-                token: action.payload.token,
+                id: action.payload.id,
                 email: action.payload.email,
-                name: action.payload.name,
-                isLogin: true
+                firstname: action.payload.firstname,
+                lastname: action.payload.lastname,
+                age: action.payload.age,
+                is_male: action.payload.is_male,
+                description: action.payload.description,
+                id_mbti: action.payload.is_mbti,
+                id_orientation: action.payload.id_orientation
 			};
 		break;
         
@@ -25,7 +34,7 @@ const loginReducer = (state = initialState, action) => {
             state = initialState;
         break;
 		
-	}
+    }
 	return state;
 };
 
