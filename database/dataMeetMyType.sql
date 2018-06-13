@@ -59,12 +59,12 @@ INSERT INTO t_mbti
          (DEFAULT, 'ENTJ');
 
 INSERT INTO t_orientation
-  VALUES (DEFAULT, 'Heterosexual'),
-         (DEFAULT, 'Homosexual'),
-         (DEFAULT, 'Bisexual');
+  VALUES (DEFAULT, 'Homme'),
+         (DEFAULT, 'Femme'),
+         (DEFAULT, 'Bi');
 
 INSERT INTO t_target
-  VALUES (DEFAULT, 'Serious relationship'),
-         (DEFAULT, 'Friends with benefits'),
-         (DEFAULT, 'Friends'),
-         (DEFAULT, 'Work buddy ');
+  VALUES (DEFAULT, 'Batir relation sérieuse'),
+         (DEFAULT, 'Devenir ami et plus'),
+         (DEFAULT, 'Construire une amitié de longue date'),
+         (DEFAULT, 'Trouver un pote de taffe');

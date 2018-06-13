@@ -51,10 +51,10 @@ CREATE TABLE T_User (
   Age               DATE            ,
   Is_Male           BOOLEAN         ,
   Description       VARCHAR(512)    , 
+  Profession        VARCHAR(64)     , 
   Id_MBTI           BIGINT          REFERENCES T_MBTI(Id),
   Id_Orientation    BIGINT          REFERENCES T_Orientation(Id)
 );
-
 
 CREATE TABLE T_Address (
   Id                SERIAL            PRIMARY KEY NOT NULL,
