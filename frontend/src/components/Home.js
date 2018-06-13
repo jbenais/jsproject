@@ -40,7 +40,7 @@ class Home extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <p>{this.props.loginReducer.name}</p>
+                    <p>{this.props.loginReducer.firstname}</p>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                         <IconButton aria-label="Delete" onClick={this.props.onLogout}>
                             <PowerSettingsNew />

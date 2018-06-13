@@ -14,9 +14,7 @@ class Login extends React.Component {
         };
 
         this.responseGoogle = this.responseGoogle.bind(this);
-        // this.responseFacebook = this.responseFacebook.bind(this)
         this.failureGoogle = this.failureGoogle.bind(this)
-        //this.signUp = this.signUp.bind(this);
     }
 
     /* responseGoogle = (response) => {
@@ -60,7 +58,6 @@ class Login extends React.Component {
     }
 
     responseGoogle(response) {
-        console.log("GOOOOOOOOOOOOOOOOOOOGLE");
         console.log(response);
         fetch('http://localhost:8888/user', {
                 method: 'POST',
@@ -81,26 +78,14 @@ class Login extends React.Component {
         console.log("Google failed");
     }
 
-    responseFacebook(response){
+    responseFacebook(response) {
         console.log(response);
-        let state = {
-            login: '',
-            token: response.accessToken,
-            email: response.email,
-            name: response.name
+        let data = {
+            access_token: response.accessToken,
+            is_google: false
         };
-        this.props.login(state);
-        fetch('http://localhost:8888/user', {
-            method: 'POST',
-            headers: {
-                'ACCEPT': 'application/json, text/plain, */*',
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                access_token: response.accessToken,
-                is_google: false
-            })
-        });
+        console.log(data);
+        this.props.login(data);
     }
 
 
@@ -165,7 +150,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         login: (response) => {
-            dispatch(LoginAction.login(response));
+            LoginAction.login(response)(dispatch);
         },
     };
 };
