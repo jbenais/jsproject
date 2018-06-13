@@ -64,7 +64,7 @@ INSERT INTO t_orientation
          (DEFAULT, 'Bi');
 
 INSERT INTO t_target
-  VALUES (DEFAULT, 'Batir relation sérieuse'),
-         (DEFAULT, 'Devenir ami et plus'),
-         (DEFAULT, 'Construire une amitié de longue date'),
-         (DEFAULT, 'Trouver un pote de taffe');
+  VALUES (DEFAULT, 'Relation serieuse'),
+         (DEFAULT, 'Amitie et plus'),
+         (DEFAULT, 'Amitie'),
+         (DEFAULT, 'Partenaire de travail');
