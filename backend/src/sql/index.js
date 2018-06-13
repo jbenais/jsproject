@@ -25,7 +25,8 @@ module.exports = {
     users: {
         add: sql('./users/add.sql'),
         getAll: sql('./users/getAll.sql'),
-        getByEmail: sql('./users/getByEmail.sql')
+        getByEmail: sql('./users/getByEmail.sql'),
+        update: sql('./users/update.sql')
     },
     userPreferences: {
         add: sql('./userPreferences/add.sql'),

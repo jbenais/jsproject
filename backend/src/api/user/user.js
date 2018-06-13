@@ -77,7 +77,6 @@ function postUserInfo(res, user_general, url) {
                     const preference = t.any(sqlUserPreference.getByIdUser, { id_user: data.id });
                     const target = t.any(sqlUserTarget.getByIdUser, { id_user: data.id });
                     console.log("Get user");
-
                     return t.batch([data, picture, address, preference, target]);
                 }
                 else {
@@ -123,7 +122,28 @@ function postUserInfo(res, user_general, url) {
 
 }
 
+function putUser(req, res, next) {
+    // const email = user_general.email;
+    const user_general = req.body.user_general;
+    db.one(sqlUser.update, user_general).then(
+        data => {
+            const status = 200;
+            res.status(status)
+            .json({
+                status: status,
+                data: data,
+                message: MESSAGE_OK
+            });
+        })
+    // const user_picture = req.body.user_picture;
+    // const user_address = req.body.user_address;
+    // const user_preference = req.body.user_preference;
+    // const user_target = req.body.user_target;
+
+}
+
 module.exports = {
     getAllUser,
-    postUser
+    postUser,
+    putUser
 };
