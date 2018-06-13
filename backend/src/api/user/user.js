@@ -8,11 +8,6 @@ const sqlPicture = require('../../sql').userPicture;
 const sqlUserPreference = require('../../sql').userPreferences;
 const sqlUserTarget = require('../../sql').userTarget;
 
-const plus = google.plus({
-    version: 'v1',
-    auth: 'AIzaSyDPgGF_QN1xOijSLG6WICVL5kI87YP7Hs0'
-});
-
 function getAllUser(req, res, next) {
     db.any(sqlUser.getAll)
         .then(function (data) {
@@ -38,10 +33,9 @@ function getAllUser(req, res, next) {
 
 function postUser(req, res, next) {
 
-    const accessToken = req.body.access_token;
     const is_google = req.body.is_google;
-    console.log("GOOGLE " + is_google);
     if (!is_google) {
+        const accessToken = req.body.data.access_token;
         FB.api('me', { fields: ['email', 'first_name', 'last_name', 'birthday', 'picture'], access_token: accessToken },
             (result) => {
                 const user_general = {
@@ -50,11 +44,25 @@ function postUser(req, res, next) {
                     'lastname': result.last_name
                 }
                 const url = result.picture.data.url;
-                postUserInfo(res, user_general, url)
+                postUserInfo(res, user_general, url);
             })
     }
     else {
-        console.log(accessToken)
+        const userId = req.body.data.google_id;
+        const plus = google.plus({
+            version: 'v1',
+            auth: 'AIzaSyDPgGF_QN1xOijSLG6WICVL5kI87YP7Hs0'
+        });
+        plus.people.get({ userId: userId })
+            .then((result) => {
+                const user_general = {
+                    'email': req.body.data.email,
+                    'firstname': result.data.name.givenName,
+                    'lastname': result.data.name.familyName
+                }
+                const url = result.data.image.url;
+                postUserInfo(res, user_general, url);
+            })
     }
 }
 

@@ -48,13 +48,13 @@ CREATE TABLE T_User (
   Email             VARCHAR(64)     UNIQUE NOT NULL,
   Firstname         VARCHAR(64)     NOT NULL,
   Lastname          VARCHAR(64)     NOT NULL,
-  Age               DATE            ,
+  Birthdate         DATE            ,
   Is_Male           BOOLEAN         ,
   Description       VARCHAR(512)    , 
+  Profession        VARCHAR(64)     , 
   Id_MBTI           BIGINT          REFERENCES T_MBTI(Id),
   Id_Orientation    BIGINT          REFERENCES T_Orientation(Id)
 );
-
 
 CREATE TABLE T_Address (
   Id                SERIAL            PRIMARY KEY NOT NULL,
