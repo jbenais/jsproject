@@ -1,4 +1,4 @@
-export function login(data) {
+export function login(res) {
 	return function action(dispatch) {
 		let state = {
 				type:      'LOGIN',
@@ -10,12 +10,15 @@ export function login(data) {
 					'Content-type': 'application/json'
 				},
 				body: JSON.stringify({
-					access_token: data.access_token,
-					is_google: data.is_google
+				data: {
+					access_token: res.access_token
+				},
+				is_google: res.is_google
 				})
 			})
 			.then((resp) => resp.json())
 			.then((response) => {
+				//console.log(response.data);
 				state.payload = response.data;
 				dispatch(state)
 			});
