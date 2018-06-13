@@ -10,15 +10,16 @@ export function login(res) {
 					'Content-type': 'application/json'
 				},
 				body: JSON.stringify({
-				data: {
-					access_token: res.access_token
-				},
-				is_google: res.is_google
+					data: {
+						access_token: res.access_token
+					},
+					is_google: res.is_google
 				})
 			})
 			.then((resp) => resp.json())
 			.then((response) => {
-				//console.log(response.data);
+				console.log("response");
+				console.log(response.data);
 				state.payload = response.data;
 				dispatch(state)
 			});

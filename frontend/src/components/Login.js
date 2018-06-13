@@ -18,7 +18,6 @@ class Login extends React.Component {
 
 
     responseGoogle(response) {
-        console.log(response.accessToken);
         console.log(response);
 
         fetch('http://localhost:8888/user', {
@@ -43,7 +42,6 @@ class Login extends React.Component {
             access_token: response.accessToken,
             is_google: false
         };
-        console.log(data);
         this.props.login(data);
     }
 
