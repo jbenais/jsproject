@@ -20,17 +20,19 @@ import 'rc-slider/assets/index.css';
 const SliderWithTooltip = createSliderWithTooltip(Slider);
 const RangewithTooltip = createSliderWithTooltip(Slider.Range);
 
-const profiles = ['ENFJ', 'ENFP', 'ENTJ', 'ENTP',
-    'ESFJ', 'ESFP', 'ESTJ', 'ESTP',
-    'INFJ', 'INFP', 'INTJ', 'INTP',
-    'ISFJ', 'ISFP', 'ISTJ', 'ISTP']
 
-const genders = ['Femme', 'Homme']
 function valueFormatter(v) {
     return `${v} km`;
 }
 
-const targets = ['Relation serieuse', 'Amitie et plus', 'Amitie', 'Partenaire de travail']
+let profiles = [];
+
+let targets = [];
+
+const genders = ['Femme', 'Homme'];
+
+let orientations = [];
+
 
 function ageFormatter(value) {
     return `${value}`;
@@ -56,6 +58,46 @@ export default class Profil extends React.Component {
         this.editProfile = this.editProfile.bind(this);
     }
 
+    componentDidMount() {
+        this.fetchMBTI();
+        this.fetchTarget();
+        this.fetchOrientation();
+    }
+
+    fetchMBTI() {
+        fetch(`http://localhost:8888/mbti`)
+        .then((resp) => resp.json())
+        .then((json) => {
+            profiles = json.data;
+        })
+        .catch(function(error) {
+            console.log('MBTI: Looks like there was a problem: \n', error);
+          });
+    }
+
+    fetchTarget() {
+        fetch(`http://localhost:8888/target`)
+        .then((resp) => resp.json())
+        .then((json) => {                
+                targets = json.data;
+                console.log(targets);
+        })
+        .catch(function(error) {
+            console.log('Targets: Looks like there was a problem: \n', error);
+          });
+    }
+
+    fetchOrientation() {
+        fetch(`http://localhost:8888/orientation`)
+        .then((resp) => resp.json())
+        .then((json) => {                
+                orientations = json.data;
+        })
+        .catch(function(error) {
+            console.log('Orientations: Looks like there was a problem: \n', error);
+          });
+    }
+
     handleChange(name) {
         return (event => {
             this.setState({
@@ -72,7 +114,9 @@ export default class Profil extends React.Component {
 
 
     render() {
+        
         const data = this.props.data;
+        console.log(data);
         return (
             <div style={{ display: 'flex', flexDirection: 'row', padding: '20px' }}>
                 <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
@@ -200,9 +244,10 @@ export default class Profil extends React.Component {
                             <FormControl component="fieldset">
                                 <FormLabel component="legend">Attirances sexuelles</FormLabel>
                                 <FormGroup style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
-                                {genders.map((gender) => {
+                                {genders.map((gender, key) => {
                                     return (
                                         <FormControlLabel
+                                        key={key}
                                         control={
                                             <Checkbox
                                                 style={{ color: '#01D2CB' }}
@@ -228,7 +273,7 @@ export default class Profil extends React.Component {
                                                 style={{ color: '#01D2CB' }}
                                                 disabled={!this.state.edit}
                                                 onChange={this.handleChange('targets')}
-                                                value={target}
+                                                value={target.name}
                                             />
                                         }
                                         label={target}
