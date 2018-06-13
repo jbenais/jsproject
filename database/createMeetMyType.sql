@@ -48,7 +48,7 @@ CREATE TABLE T_User (
   Email             VARCHAR(64)     UNIQUE NOT NULL,
   Firstname         VARCHAR(64)     NOT NULL,
   Lastname          VARCHAR(64)     NOT NULL,
-  Age               DATE            ,
+  Birthdate         DATE            ,
   Is_Male           BOOLEAN         ,
   Description       VARCHAR(512)    , 
   Profession        VARCHAR(64)     , 
