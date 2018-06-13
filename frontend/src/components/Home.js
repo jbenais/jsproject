@@ -40,7 +40,7 @@ class Home extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <p>{this.props.loginReducer.firstname}</p>
+                    <p>{this.props.loginReducer.user_general.firstname}</p>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
                         <IconButton aria-label="Delete" onClick={this.props.onLogout}>
                             <PowerSettingsNew />
@@ -61,7 +61,7 @@ class Home extends React.Component {
                     {this.state.value === 0 && <About />}
                     {this.state.value === 1 && <Matches />}
                     {this.state.value === 2 && <Messages />}
-                    {this.state.value === 3 && <Profil />}
+                    {this.state.value === 3 && <Profil data={this.props.loginReducer}/>}
             </div >
 
         )
