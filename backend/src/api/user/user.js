@@ -48,7 +48,7 @@ function postUser(req, res, next) {
             })
     }
     else {
-        const userId = req.body.data.google_id;
+        const userId = req.body.data.access_token;
         const plus = google.plus({
             version: 'v1',
             auth: 'AIzaSyDPgGF_QN1xOijSLG6WICVL5kI87YP7Hs0'
