@@ -1,13 +1,13 @@
 \c meetmytype
 
+DELETE FROM t_user_picture CASCADE;
+ALTER SEQUENCE t_user_picture_id_seq RESTART WITH 1;
+
 DELETE FROM t_user CASCADE;
 ALTER SEQUENCE t_user_id_seq RESTART WITH 1;
 
 DELETE FROM t_user_mbti_preferences CASCADE;
 ALTER SEQUENCE t_user_mbti_preferences_id_seq RESTART WITH 1;
-
-DELETE FROM t_user_picture CASCADE;
-ALTER SEQUENCE t_user_picture_id_seq RESTART WITH 1;
 
 DELETE FROM t_user_target CASCADE;
 ALTER SEQUENCE t_user_target_id_seq RESTART WITH 1;
