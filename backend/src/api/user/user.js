@@ -36,39 +36,6 @@ function getAllUser(req, res, next) {
         });
 }
 
-// function postUser(req, res, next) {
-//     const accessToken = req.body.access_token;
-//     const is_google = req.body.is_google;
-//     console.log(accessToken);
-
-
-//     plus.people.get({ userId: accessToken })
-//         .then(data => {
-//             // const user_general = {
-//             //     "email": "delphine.au@g",
-//             //     "firstname": "Mickael",
-//             //     "lastname": "Au",
-//             //     "age": 21,
-//             //     "is_male": true
-//             // }
-//             console.log(data);
-//         })
-//         .catch(error => {
-//             console.error(error);
-//         });
-// }
-
-// function postUser(req, res, next) {
-//     const accessToken = req.body.access_token;
-//     const is_google = req.body.is_google;
-//     console.log(accessToken);
-//     res.status(200)
-//         .json({
-//             status: 200,
-//             data: "",
-//             message: MESSAGE_OK
-//         });
-// }
 function postUser(req, res, next) {
 
     const accessToken = req.body.access_token;
@@ -94,74 +61,60 @@ function postUser(req, res, next) {
 function postUserInfo(res, user_general, url) {
     const email = user_general.email;
     db.tx(t => {
-        return t.oneOrNone(sqlUser.getByEmail, {email: email})
+        return t.oneOrNone(sqlUser.getByEmail, { email: email })
             .then(data => {
                 if (data) {
-                    console.log(data);
-                    return data;
-                    // const user_address = t.any(sqlAddress.getByIdUser, {id_user: data.id});
-                    // const user_picture = t.any(sqlPicture.getByIdUser, {id_user: data.id});
-                    // const user_preference = t.any(sqlUserPreference.getByIdUser, {id_user: data.id});
-                    // const user_target = t.any(sqlUserTarget.getByIdUser, {id_user: data.id});
-                    // const myData = {
-                    //     user_general: data,
-                    //     user_picture: user_picture,
-                    //     user_address: user_address,
-                    //     user_preference: user_preference,
-                    //     user_target: user_target  
-                    // };
-                    // console.log(myData);
-                    // return myData;
+                    const address = t.oneOrNone(sqlAddress.getByIdUser, { id_user: data.id });
+                    const picture = t.any(sqlPicture.getByIdUser, { id_user: data.id });
+                    const preference = t.any(sqlUserPreference.getByIdUser, { id_user: data.id });
+                    const target = t.any(sqlUserTarget.getByIdUser, { id_user: data.id });
+                    console.log("Get user");
+
+                    return t.batch([data, picture, address, preference, target]);
                 }
-                else{
-                    console.log(data);
-                    db.one(sqlUser.add, user_general)
-                    .then(data => {
-                        console.log(data.id);
-                        postUserProfilePicture(res, data.id, url);
-                    })
-                    .catch(error => {
-                        console.log(error);
-                        res.status(400)
-                            .json({
-                                status: 400,
-                                data: { error },
-                                message: error.message
-                            });
-                    });
+                else {
+                    return t.one(sqlUser.add, user_general).then(
+                        user => {
+                            const user_picture = {
+                                id_user: user.id,
+                                url: url,
+                                is_profile: true
+                            }
+                            const picture = t.any(sqlPicture.add, user_picture)
+                            console.log("Created new user");
+                            return t.batch([user, picture, null, [], []])
+                        }
+                    )
                 }
             });
-    })
+    }).then(result => {
+        const status = 200
+        const data = {
+            user_general: result[0],
+            user_picture: result[1],
+            user_address: result[2],
+            user_preference: result[3],
+            user_target: result[4]
+        }
+        res.status(status)
+            .json({
+                status: status,
+                data: data,
+                message: MESSAGE_OK
+            });
+    }).catch(function (error) {
+        const status = 403
+        console.log(error);
+        res.status(status)
+            .json({
+                status: status,
+                data: {},
+                message: error.message
+            });
+    });
 
 }
 
-
-function postUserProfilePicture(res, id_user, url) {
-    const user_picture = {
-        id_user: id_user,
-        url: url,
-        is_profile: true
-    }
-    db.one(sqlPicture.add, user_picture)
-        .then(data => {
-            const status = 200
-            res.status(status)
-                .json({
-                    status: status,
-                    data: data,
-                    message: MESSAGE_OK
-                });
-        })
-        .catch(error => {
-            console.log(error);
-            res.status(400)
-                .json({
-                    status: 400,
-                    data: { error },
-                    message: error.message
-                });
-        });
-}
 module.exports = {
     getAllUser,
     postUser
