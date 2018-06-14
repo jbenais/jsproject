@@ -27,6 +27,7 @@ module.exports = {
         add: sql('./users/add.sql'),
         getAll: sql('./users/getAll.sql'),
         getById: sql('./users/getById.sql'),
+        getMonoPossibleByIdUser: sql('./users/getMonoPossibleByIdUser.sql'),
         getByEmail: sql('./users/getByEmail.sql'),
         update: sql('./users/update.sql')
     },

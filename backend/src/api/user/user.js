@@ -48,7 +48,6 @@ function getUserById(req, res, next) {
             });
     }).then(result => {
         console.log("Get info");
-
         const status = 200
         const data = {
             user_general: result[0],
@@ -74,6 +73,99 @@ function getUserById(req, res, next) {
             });
     });
 }
+
+function getPossibleByIdUser(req, res, next) {
+    const id = req.params.id;
+    db.tx(t => {
+        return t.oneOrNone(sqlUser.getById, { id: id })
+            .then(data => {
+                if (data) {
+                    const address = t.oneOrNone(sqlAddress.getByIdUser, { id_user: data.id });
+                    const preference = t.any(sqlUserPreference.getByIdUser, { id_user: data.id });
+                    const target = t.any(sqlUserTarget.getByIdUser, { id_user: data.id });
+                    return t.batch([data, address, preference, target]);
+                }
+            });
+    }).then(result => {
+        const data = {
+            user_general: result[0],
+            user_address: result[1],
+            user_preference: result[2],
+            user_target: result[3]
+        }
+        parse(res, data);
+    }).catch(function (error) {
+        console.log("Erreur: getPossibleByIdUser")
+    });
+}
+
+function parse(res, data) {
+    const p = buildFilter(data.user_general);
+    db.any(sqlUser.getMonoPossibleByIdUser, p)
+        .then(function (data) {
+            const status = 200
+            res.status(status)
+                .json({
+                    status: status,
+                    data: data,
+                    message: MESSAGE_OK
+                });
+        })
+        .catch(function (error) {
+            const status = 403
+            console.log(error);
+            res.status(status)
+                .json({
+                    status: status,
+                    data: {},
+                    message: error.message
+                });
+        });
+}
+
+function buildFilter(user_general) {
+    console.log(user_general);
+    const op_orientation_first = user_general.is_male ? 1 : 2;
+    const op_orientation_second = 3;
+    const id_orientation = user_general.id_orientation;
+    switch (id_orientation) {
+        //Homme
+        case 1:
+            return {
+                id: user_general.id,
+                op_is_male: true,
+                op_orientation_first: op_orientation_first,
+                op_orientation_second: op_orientation_second,
+                op_birthdate_min: setYear(user_general.age_max),
+                op_birthdate_max: setYear(user_general.age_min)
+            }
+        //Femme
+        case 2:
+            return {
+                id: user_general.id,
+                op_is_male: false,
+                op_orientation_first: op_orientation_first,
+                op_orientation_second: op_orientation_second,
+                op_birthdate_min: setYear(user_general.age_max),
+                op_birthdate_max: setYear(user_general.age_min)
+            }
+        default:
+            return {
+                id: user_general.id,
+                op_orientation_first: op_orientation_first,
+                op_orientation_second: op_orientation_second,
+                op_birthdate_min: setYear(user_general.age_max),
+                op_birthdate_max: setYear(user_general.age_min)
+            }
+    }
+}
+
+function setYear(nbYear){
+    let d = new Date();
+    d.setFullYear(d.getFullYear() - nbYear);
+    return d;
+}
+
 //#endregion
 
 //#region POST
@@ -210,10 +302,12 @@ function putUserAddress(user_address, id) {
         return t.oneOrNone(sqlAddress.getByIdUser, { id_user: id })
             .then(data => {
                 if (data != null) {
+                    console.log(`Address login is : ${id}`);
                     const address = t.oneOrNone(sqlAddress.update, user_address);
                     return t.batch([address]);
                 }
                 else {
+                    console.log(`Address login is : ${id}`);
                     const address = t.oneOrNone(sqlAddress.add, user_address);
                     return t.batch([address]);
                 }
@@ -222,6 +316,7 @@ function putUserAddress(user_address, id) {
         .then(() => {
             console.log("Updated: putUserAddress")
         }).catch(function (error) {
+            console.log(error);
             console.log("Erreur: putUserAddress")
         });
 }
@@ -278,6 +373,7 @@ function putUserTarget(user_target_new, id) {
 module.exports = {
     getAllUser,
     getUserById,
+    getPossibleByIdUser,
     postUser,
     putUser
 };
