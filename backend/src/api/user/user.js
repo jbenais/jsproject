@@ -173,18 +173,15 @@ function putUserGeneral(res, user_general){
 function putUser(req, res, next) {
     db.tx(t => {
         var queries = [];
-        console.log(req.body);
         const user_general = req.body.user_general;
         queries.push(putUserGeneral(res, user_general));
         const user_address = req.body.user_address;
         if (user_address != null)
             queries.push(putUserAddress(res, user_address));
         const user_preference_new = req.body.user_preferences;
-        if (user_preference_new.length != 0)
-            queries.push(putUserPreferences(res, user_preference_new));
+        queries.push(putUserPreferences(res, user_preference_new));
         const user_target_new = req.body.user_target;
-        if (user_preference_new.length != 0)
-            queries.push(putUserTarget(res, user_target_new));
+        queries.push(putUserTarget(res, user_target_new));
         return t.batch(queries)
     }).then(result => {
         getUserInfo(res, 1)
