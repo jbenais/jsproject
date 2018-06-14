@@ -86,22 +86,26 @@ function getPossibleByIdUser(req, res, next) {
                     return t.batch([data, address, preference, target]);
                 }
             });
-    }).then(result => {
-        const data = {
-            user_general: result[0],
-            user_address: result[1],
-            user_preference: result[2],
-            user_target: result[3]
+    }).then(data => {
+        const user = {
+            user_general: data[0],
+            user_address: data[1],
+            user_preference: data[2],
+            user_target: data[3]
         }
-        parse(res, data);
+        parse(res, user);
     }).catch(function (error) {
+        console.log(error);
         console.log("Erreur: getPossibleByIdUser")
     });
 }
 
-function parse(res, data) {
-    const p = buildFilter(data.user_general);
-    db.any(sqlUser.getMonoPossibleByIdUser, p)
+function parse(res, user) {
+    const {user_general} = user
+    // Check if user is bisexual
+    const queryFile = user_general.id_orientation == 3 ? sqlUser.getBiPossibleByIdUser : sqlUser.getMonoPossibleByIdUser;
+    const queryObject = user_general.id_orientation == 3 ? createBiObject(user_general) : createMonoObject(user_general);
+    db.any(queryFile, queryObject)
         .then(function (data) {
             const status = 200
             res.status(status)
@@ -123,44 +127,34 @@ function parse(res, data) {
         });
 }
 
-function buildFilter(user_general) {
-    console.log(user_general);
-    const op_orientation_first = user_general.is_male ? 1 : 2;
+function createMonoObject(user_general){
+    const {id, is_male, id_orientation, age_max, age_min} = user_general
+    const op_orientation_first = is_male ? 1 : 2;
     const op_orientation_second = 3;
-    const id_orientation = user_general.id_orientation;
-    switch (id_orientation) {
-        //Homme
-        case 1:
-            return {
-                id: user_general.id,
-                op_is_male: true,
-                op_orientation_first: op_orientation_first,
-                op_orientation_second: op_orientation_second,
-                op_birthdate_min: setYear(user_general.age_max),
-                op_birthdate_max: setYear(user_general.age_min)
-            }
-        //Femme
-        case 2:
-            return {
-                id: user_general.id,
-                op_is_male: false,
-                op_orientation_first: op_orientation_first,
-                op_orientation_second: op_orientation_second,
-                op_birthdate_min: setYear(user_general.age_max),
-                op_birthdate_max: setYear(user_general.age_min)
-            }
-        default:
-            return {
-                id: user_general.id,
-                op_orientation_first: op_orientation_first,
-                op_orientation_second: op_orientation_second,
-                op_birthdate_min: setYear(user_general.age_max),
-                op_birthdate_max: setYear(user_general.age_min)
-            }
+    return {
+        id: id,
+        op_is_male: id_orientation == 1 ? true : false,
+        op_orientation_first: op_orientation_first,
+        op_orientation_second: op_orientation_second,
+        op_birthdate_min: computeLimitYear(age_max),
+        op_birthdate_max: computeLimitYear(age_min)
     }
 }
 
-function setYear(nbYear){
+function createBiObject(user_general){
+    const {id, is_male, age_max, age_min} = user_general
+    const op_orientation_first = is_male ? 1 : 2;
+    const op_orientation_second = 3;
+    return {
+        id: id,
+        op_orientation_first: op_orientation_first,
+        op_orientation_second: op_orientation_second,
+        op_birthdate_min: computeLimitYear(age_max),
+        op_birthdate_max: computeLimitYear(age_min)
+    }
+}
+
+function computeLimitYear(nbYear){
     let d = new Date();
     d.setFullYear(d.getFullYear() - nbYear);
     return d;
