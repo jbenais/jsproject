@@ -3,6 +3,6 @@ const db = require('../../api/user/user')
 
 models.get('/', db.getAllUser);
 models.post('/', db.postUser);
-models.put('/', db.putUser);
+models.put('/:id', db.putUser);
 
 module.exports = models;
