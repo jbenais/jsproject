@@ -12,9 +12,9 @@ function getAllUser(req, res, next) {
     db.any(sqlUser.getAll)
         .then(function (data) {
             const status = 200
-            res.status(200)
+            res.status(status)
                 .json({
-                    status: 200,
+                    status: status,
                     data: data,
                     message: MESSAGE_OK
                 });
@@ -32,9 +32,11 @@ function getAllUser(req, res, next) {
 }
 
 
-function getUserInfo(res) {
+function getUserInfo(req, res, next) {
+    console.log(req.params);
+    const id = req.params.id;
     db.tx(t => {
-        return t.oneOrNone(sqlUser.getById, {id: 1})
+        return t.oneOrNone(sqlUser.getById, {id: id})
             .then(data => {
                 if (data) {
                     const address = t.oneOrNone(sqlAddress.getByIdUser, { id_user: data.id });
@@ -53,6 +55,7 @@ function getUserInfo(res) {
             user_preference: result[3],
             user_target: result[4]
         }
+        console.log("Get user info");
         res.status(status)
             .json({
                 status: status,
@@ -161,31 +164,23 @@ function postUserInfo(res, user_general, url) {
     });
 }
 
-
-function putUserGeneral(res, user_general){
-    db.oneOrNone(sqlUser.update, user_general).then(
-        data => {
-            return data;
-        })
-}
-
-
 function putUser(req, res, next) {
+    const id = req.params.id
     db.tx(t => {
         var queries = [];
         const user_general = req.body.user_general;
-        queries.push(putUserGeneral(res, user_general));
-        const user_address = req.body.user_address;
-        if (user_address != null)
-            queries.push(putUserAddress(res, user_address));
         const user_preference_new = req.body.user_preferences;
-        queries.push(putUserPreferences(res, user_preference_new));
+        const user_address = req.body.user_address;
         const user_target_new = req.body.user_target;
-        queries.push(putUserTarget(res, user_target_new));
+
+        queries.push(putUserGeneral(user_general, id));
+        if (user_address != null)
+            queries.push(putUserAddress(user_address, id));
+        queries.push(putUserPreferences(user_preference_new, id));
+        queries.push(putUserTarget(user_target_new, id));
         return t.batch(queries)
-    }).then(result => {
-        getUserInfo(res, 1)
-        
+    }).then(() => {
+        getUserInfo(req, res, next);  
     }).catch(function (error) {
         const status = 403
         console.log(error);
@@ -198,17 +193,26 @@ function putUser(req, res, next) {
     });
 }
 
-function putUserAddress(res, user_address){
+function putUserGeneral(user_general, id){
+    db.oneOrNone(sqlUser.update, user_general)
+    .then(
+        data => {
+            return data;
+        })
+    .catch(() => {
+        console.log("Erreur: putUserGeneral")
+    });
+}
+
+function putUserAddress(user_address, id){
     db.tx(t => {
-        return t.oneOrNone(sqlAddress.getByIdUser, { id_user: 1})
+        return t.oneOrNone(sqlAddress.getByIdUser, { id_user: id})
             .then(data => {
                 if (data != null) {
-                    console.log("Updated address");
                     const address = t.oneOrNone(sqlAddress.update, user_address);
                     return t.batch([address]);
                 }
                 else {
-                    console.log("Added address");
                     const address = t.oneOrNone(sqlAddress.add, user_address);
                     return t.batch([address]);
                 }
@@ -222,9 +226,9 @@ function putUserAddress(res, user_address){
 }
 
 
-function putUserPreferences(res, user_preference_new){
+function putUserPreferences(user_preference_new, id){
     db.tx(t => {
-        return t.any(sqlUserPreference.getByIdUser, { id_user: 1 })
+        return t.any(sqlUserPreference.getByIdUser, { id_user: id })
             .then(user_preference_base => {
                 var queries = [];
                 user_preference_new.forEach(n => {
@@ -246,9 +250,9 @@ function putUserPreferences(res, user_preference_new){
     });
 }
 
-function putUserTarget(res, user_target_new){
+function putUserTarget(user_target_new, id){
     db.tx(t => {
-        return t.any(sqlUserTarget.getByIdUser, { id_user: 1 })
+        return t.any(sqlUserTarget.getByIdUser, { id_user: id })
             .then(user_target_base => {
                 var queries = [];
                 user_target_new.forEach(n => {
