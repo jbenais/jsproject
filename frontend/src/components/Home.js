@@ -3,7 +3,7 @@ import * as LoginAction from '../actions/LoginAction';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import IconButton from '@material-ui/core/IconButton';
-import Profil from './Profile/Profil';
+import Profile from './Profile/Profile';
 import About from './About/About';
 import Messages from './Messages/Messages';
 import Matches from './Matches/Matches';
@@ -61,7 +61,7 @@ class Home extends React.Component {
                     {this.state.value === 0 && <About />}
                     {this.state.value === 1 && <Matches />}
                     {this.state.value === 2 && <Messages />}
-                    {this.state.value === 3 && <Profil data={this.props.loginReducer}/>}
+                    {this.state.value === 3 && <Profile data={this.props.loginReducer}/>}
             </div >
 
         )
