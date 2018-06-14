@@ -31,12 +31,10 @@ function getAllUser(req, res, next) {
         });
 }
 
-
 function getUserInfo(req, res, next) {
-    console.log(req.params);
     const id = req.params.id;
     db.tx(t => {
-        return t.oneOrNone(sqlUser.getById, {id: id})
+        return t.oneOrNone(sqlUser.getById, { id: id })
             .then(data => {
                 if (data) {
                     const address = t.oneOrNone(sqlAddress.getByIdUser, { id_user: data.id });
@@ -47,6 +45,8 @@ function getUserInfo(req, res, next) {
                 }
             });
     }).then(result => {
+        console.log("Get info");
+
         const status = 200
         const data = {
             user_general: result[0],
@@ -55,7 +55,6 @@ function getUserInfo(req, res, next) {
             user_preference: result[3],
             user_target: result[4]
         }
-        console.log("Get user info");
         res.status(status)
             .json({
                 status: status,
@@ -119,7 +118,6 @@ function postUserInfo(res, user_general, url) {
                     const picture = t.any(sqlPicture.getByIdUser, { id_user: data.id });
                     const preference = t.any(sqlUserPreference.getByIdUser, { id_user: data.id });
                     const target = t.any(sqlUserTarget.getByIdUser, { id_user: data.id });
-                    console.log("Get user");
                     return t.batch([data, picture, address, preference, target]);
                 }
                 else {
@@ -178,9 +176,9 @@ function putUser(req, res, next) {
             queries.push(putUserAddress(user_address, id));
         queries.push(putUserPreferences(user_preference_new, id));
         queries.push(putUserTarget(user_target_new, id));
-        return t.batch(queries)
+        return t.batch(queries);
     }).then(() => {
-        getUserInfo(req, res, next);  
+        getUserInfo(req, res, next);
     }).catch(function (error) {
         const status = 403
         console.log(error);
@@ -193,20 +191,18 @@ function putUser(req, res, next) {
     });
 }
 
-function putUserGeneral(user_general, id){
-    db.oneOrNone(sqlUser.update, user_general)
-    .then(
-        data => {
-            return data;
-        })
-    .catch(() => {
-        console.log("Erreur: putUserGeneral")
-    });
+function putUserGeneral(user_general, id) {
+    return db.oneOrNone(sqlUser.update, user_general)
+        .then(() => {
+            console.log("Updated: putUserGeneral")
+        }).catch(function (error) {
+            console.log("Erreur: putUserGeneral")
+        });
 }
 
-function putUserAddress(user_address, id){
-    db.tx(t => {
-        return t.oneOrNone(sqlAddress.getByIdUser, { id_user: id})
+function putUserAddress(user_address, id) {
+    return db.tx(t => {
+        return t.oneOrNone(sqlAddress.getByIdUser, { id_user: id })
             .then(data => {
                 if (data != null) {
                     const address = t.oneOrNone(sqlAddress.update, user_address);
@@ -217,17 +213,17 @@ function putUserAddress(user_address, id){
                     return t.batch([address]);
                 }
             });
-    }).then(result => {
-        console.log("Updated: putUserAddress")
-        return result;
-    }).catch(function (error) {
-        console.log("Erreur: putUserAddress")
-    });
+    })
+        .then(() => {
+            console.log("Updated: putUserAddress")
+        }).catch(function (error) {
+            console.log("Erreur: putUserAddress")
+        });
 }
 
 
-function putUserPreferences(user_preference_new, id){
-    db.tx(t => {
+function putUserPreferences(user_preference_new, id) {
+    return db.tx(t => {
         return t.any(sqlUserPreference.getByIdUser, { id_user: id })
             .then(user_preference_base => {
                 var queries = [];
@@ -250,8 +246,8 @@ function putUserPreferences(user_preference_new, id){
     });
 }
 
-function putUserTarget(user_target_new, id){
-    db.tx(t => {
+function putUserTarget(user_target_new, id) {
+    return db.tx(t => {
         return t.any(sqlUserTarget.getByIdUser, { id_user: id })
             .then(user_target_base => {
                 var queries = [];
