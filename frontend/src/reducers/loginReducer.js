@@ -22,38 +22,44 @@ const initialState = {
         }
     ],
     user_address: null,
-    user_preference: [],
+    user_preferences: [],
     user_target: [],
-    is_logged : false,
-   
+    is_logged: false,
+
 };
 
 const loginReducer = (state = initialState, action) => {
     console.log(action.payload);
-	switch (action.type) {
-		case 'LOGIN':
-			state = {
+    switch (action.type) {
+        case 'LOGIN':
+            state = {
                 ...state,
                 user_general: action.payload.user_general,
                 user_picture: action.payload.user_picture,
                 user_address: action.payload.user_address,
-                user_preference: action.payload.user_preference,
+                user_preferences: action.payload.user_preference,
                 user_target: action.payload.user_target,
                 is_logged: true,
-			};
-		break;
-        
+            };
+            break;
+
         case 'LOGOUT':
             state = initialState;
+            break;
+
         case 'UPDATE':
             state = {
                 ...state,
-                user_general: action.payload
+                user_general: action.payload.user_general,
+                user_picture: action.payload.user_picture,
+                user_address: action.payload.user_address,
+                user_preferences: action.payload.user_preference,
+                user_target: action.payload.user_target,
             }
-        break;
-		
+            break;
+
     }
-	return state;
+    return state;
 };
 
 export default loginReducer;

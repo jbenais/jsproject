@@ -29,7 +29,6 @@ export default class Map extends React.Component {
             },
             mapCenter: event.latLng
         });
-
     }
 
     render() {

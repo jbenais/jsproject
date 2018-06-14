@@ -39,18 +39,24 @@ export function update(res) {
 			type:      'UPDATE',
 			payload:    ''
 	};
-	console.log("caca");
+	console.log("reponseeee");
 	console.log({
-		user_general: res
+		user_general: res.user_general,
+		user_address: res.user_address,
+		user_preferences: res.user_preferences,
+		user_target: res.user_target,
 	});
-	return fetch('http://localhost:8888/user', {
+	return fetch('http://localhost:8888/user/' + res.user_general.id_user, {
 			method: 'PUT',
 			headers: {
 				'ACCEPT': 'application/json, text/plain, */*',
 				'Content-type': 'application/json'
 			},
 			body: JSON.stringify({
-				user_general: res
+				user_general: res.user_general,
+				user_address: res.user_address,
+				user_preferences: res.user_preferences,
+				user_target: res.user_target,
 			})
 		})
 		.then((resp) => resp.json())
