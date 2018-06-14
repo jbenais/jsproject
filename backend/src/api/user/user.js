@@ -1,13 +1,15 @@
 const db = require('../index');
 const { google } = require('googleapis');
 const FB = require('fb').default;
-const MESSAGE_OK = 'OK';
 const sqlUser = require('../../sql').users;
 const sqlAddress = require('../../sql').address;
 const sqlPicture = require('../../sql').userPicture;
 const sqlUserPreference = require('../../sql').userPreferences;
 const sqlUserTarget = require('../../sql').userTarget;
 
+const MESSAGE_OK = 'OK';
+
+//#region GET
 function getAllUser(req, res, next) {
     db.any(sqlUser.getAll)
         .then(function (data) {
@@ -31,7 +33,7 @@ function getAllUser(req, res, next) {
         });
 }
 
-function getUserInfo(req, res, next) {
+function getUserById(req, res, next) {
     const id = req.params.id;
     db.tx(t => {
         return t.oneOrNone(sqlUser.getById, { id: id })
@@ -72,9 +74,10 @@ function getUserInfo(req, res, next) {
             });
     });
 }
+//#endregion
 
+//#region POST
 function postUser(req, res, next) {
-
     const is_google = req.body.is_google;
     if (!is_google) {
         const accessToken = req.body.data.access_token;
@@ -161,7 +164,9 @@ function postUserInfo(res, user_general, url) {
             });
     });
 }
+//#endregion
 
+//#region PUT
 function putUser(req, res, next) {
     const id = req.params.id
     db.tx(t => {
@@ -178,7 +183,7 @@ function putUser(req, res, next) {
         queries.push(putUserTarget(user_target_new, id));
         return t.batch(queries);
     }).then(() => {
-        getUserInfo(req, res, next);
+        getUserById(req, res, next);
     }).catch(function (error) {
         const status = 403
         console.log(error);
@@ -220,7 +225,6 @@ function putUserAddress(user_address, id) {
             console.log("Erreur: putUserAddress")
         });
 }
-
 
 function putUserPreferences(user_preference_new, id) {
     return db.tx(t => {
@@ -268,11 +272,12 @@ function putUserTarget(user_target_new, id) {
     }).catch(function (error) {
         console.log("Erreur: putUserTarget")
     });
-
 }
+//#endregion
 
 module.exports = {
     getAllUser,
+    getUserById,
     postUser,
     putUser
 };
