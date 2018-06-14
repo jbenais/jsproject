@@ -7,12 +7,9 @@ export default class Map extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            mapCenter: { lat: 48.723627, lng: 21.254199900000003 },
+            mapCenter: this.props.center,
             markers: {
-                position: {
-                    lat: 48.723627,
-                    lng: 21.254199900000003,
-                },
+                position: this.props.markers,
             },
         }
         this.handleMapClick = this.handleMapClick.bind(this);
@@ -29,13 +26,14 @@ export default class Map extends React.Component {
             },
             mapCenter: event.latLng
         });
+        this.props.onMapClick(this.state.markers.position, this.state.mapCenter)
     }
 
     render() {
         const GoogleMapsComponent =  withScriptjs(withGoogleMap(props => (
             <GoogleMap
                 ref={props.onMapLoad}
-                defaultZoom={13}
+                defaultZoom={1}
                 defaultCenter={props.center}
                 onClick={props.onMapClick}
             >

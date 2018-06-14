@@ -1,13 +1,17 @@
 TO DO
 
+======> Finir MODIFICATION user
 
-=> Finir MODIFICATION user
-- Map avec marqueur et envoi au backend
-- Préférences amoureuses
+- Map avec marqueur et envoi au backend [OK]
+- Max distance [OK]
+- Age range [OK]
 
-=> Faire page de match
+- Type relations
+- Préférences MBTI
+
+======> Faire page de match
 - Update de la liste lorsqu'il y a match
 - Rappel de la requête quand liste est vide
 
-=> Faire messagerie
+======> Faire messagerie
 
