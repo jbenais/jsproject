@@ -51,7 +51,10 @@ CREATE TABLE T_User (
   Birthdate         DATE            ,
   Is_Male           BOOLEAN         ,
   Description       VARCHAR(512)    , 
-  Profession        VARCHAR(64)     , 
+  Profession        VARCHAR(64)     ,
+  Max_distance      SMALLINT        NOT NULL DEFAULT 1000,
+  Age_Min           SMALLINT        NOT NULL DEFAULT 18,
+  Age_Max           SMALLINT        NOT NULL DEFAULT 65,
   Id_MBTI           BIGINT          REFERENCES T_MBTI(Id),
   Id_Orientation    BIGINT          REFERENCES T_Orientation(Id)
 );
