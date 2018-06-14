@@ -71,7 +71,7 @@ INSERT INTO t_target
 
 INSERT INTO t_user
   VALUES (DEFAULT, 'natalie.portman@gmail.com', 'Natalie', 'Portman', '9/06/1981', false, 'I like men', 'Try me', 150, 20, 30, 12, 1),
-         (DEFAULT, 'brigitte.bardot@gmail.com', 'Brigitte', 'Portman', '28/09/1934', false, 'I like men', 'Save animals', 150, 20, 30, 12, 1),
+         (DEFAULT, 'brigitte.bardot@gmail.com', 'Brigitte', 'Bardot', '28/09/1934', false, 'I like men', 'Save animals', 150, 20, 30, 12, 1),
          (DEFAULT, 'ellen.degeneres@gmail.com', 'Ellen', 'DeGeneres', '26/01/1958', false, 'I like women', 'Come to my personal show', 500, 20, 30, 12, 2),
          (DEFAULT, 'cara.delevigne@gmail.com', 'Cara', 'Delevigne', '12/08/1992', false, 'I like both', 'Try me', 200, 20, 30, 4, 3),
          (DEFAULT, 'freddie.mercury@gmail.com', 'Freddie', 'Mercury', '5/07/1946', true, 'I like men', 'I want to break free', 1000, 20, 30, 1, 1),
@@ -79,19 +79,3 @@ INSERT INTO t_user
          (DEFAULT, 'zac.efron@gmail.com', 'Zac ', 'Efron', '18/10/1987', true, 'I like women', 'Be my prom girl', 700, 20, 30, 8, 2),
          (DEFAULT, 'donald.glover@gmail.com', 'Donald ', 'Glover', '25/09/1983', true, 'I like women', 'I m Childish Gambino', 100, 20, 30, 10, 2),
          (DEFAULT, 'sam.smith@gmail.com', 'Sam', 'Smith', '25/09/1983', true, 'I like both', 'Stay with me', 100, 20, 30, 7, 3)
-
--- CREATE TABLE T_User (
---   Id                SERIAL          PRIMARY KEY NOT NULL,
---   Email             VARCHAR(64)     UNIQUE NOT NULL,
---   Firstname         VARCHAR(64)     NOT NULL,
---   Lastname          VARCHAR(64)     NOT NULL,
---   Birthdate         DATE            ,
---   Is_Male           BOOLEAN         ,
---   Description       VARCHAR(512)    , 
---   Profession        VARCHAR(64)     ,
---   Max_distance      SMALLINT        NOT NULL DEFAULT 1000,
---   Age_Min           SMALLINT        NOT NULL DEFAULT 18,
---   Age_Max           SMALLINT        NOT NULL DEFAULT 65,
---   Id_MBTI           SMALLINT        REFERENCES T_MBTI(Id),
---   Id_Orientation    SMALLINT        REFERENCES T_Orientation(Id)
--- );
