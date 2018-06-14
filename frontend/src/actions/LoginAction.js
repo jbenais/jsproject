@@ -39,7 +39,7 @@ export function update(res) {
 			type:      'UPDATE',
 			payload:    ''
 	};
-	console.log("reponseeee");
+	console.log(res);
 	console.log({
 		user_general: res.user_general,
 		user_address: res.user_address,
@@ -61,8 +61,6 @@ export function update(res) {
 		})
 		.then((resp) => resp.json())
 		.then((response) => {
-			console.log("response");
-			console.log(response.data);
 			state.payload = response.data;
 			dispatch(state)
 		});
