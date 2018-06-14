@@ -45,6 +45,11 @@ const loginReducer = (state = initialState, action) => {
         
         case 'LOGOUT':
             state = initialState;
+        case 'UPDATE':
+            state = {
+                ...state,
+                user_general: action.payload
+            }
         break;
 		
     }

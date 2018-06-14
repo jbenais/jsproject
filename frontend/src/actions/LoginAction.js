@@ -32,3 +32,33 @@ export function logout() {
 		type: 	'LOGOUT'
 	};
 }
+
+export function update(res) {
+	return function action(dispatch) {
+	let state = {
+			type:      'UPDATE',
+			payload:    ''
+	};
+	console.log("caca");
+	console.log({
+		user_general: res
+	});
+	return fetch('http://localhost:8888/user', {
+			method: 'PUT',
+			headers: {
+				'ACCEPT': 'application/json, text/plain, */*',
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify({
+				user_general: res
+			})
+		})
+		.then((resp) => resp.json())
+		.then((response) => {
+			console.log("response");
+			console.log(response.data);
+			state.payload = response.data;
+			dispatch(state)
+		});
+	}
+}
