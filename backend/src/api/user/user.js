@@ -31,6 +31,46 @@ function getAllUser(req, res, next) {
         });
 }
 
+
+function getUserInfo(res) {
+    db.tx(t => {
+        return t.oneOrNone(sqlUser.getById, {id: 1})
+            .then(data => {
+                if (data) {
+                    const address = t.oneOrNone(sqlAddress.getByIdUser, { id_user: data.id });
+                    const picture = t.any(sqlPicture.getByIdUser, { id_user: data.id });
+                    const preference = t.any(sqlUserPreference.getByIdUser, { id_user: data.id });
+                    const target = t.any(sqlUserTarget.getByIdUser, { id_user: data.id });
+                    return t.batch([data, picture, address, preference, target]);
+                }
+            });
+    }).then(result => {
+        const status = 200
+        const data = {
+            user_general: result[0],
+            user_picture: result[1],
+            user_address: result[2],
+            user_preference: result[3],
+            user_target: result[4]
+        }
+        res.status(status)
+            .json({
+                status: status,
+                data: data,
+                message: MESSAGE_OK
+            });
+    }).catch(function (error) {
+        const status = 403
+        console.log(error);
+        res.status(status)
+            .json({
+                status: status,
+                data: {},
+                message: error.message
+            });
+    });
+}
+
 function postUser(req, res, next) {
 
     const is_google = req.body.is_google;
@@ -119,26 +159,118 @@ function postUserInfo(res, user_general, url) {
                 message: error.message
             });
     });
-
 }
 
-function putUser(req, res, next) {
-    // const email = user_general.email;
-    const user_general = req.body.user_general;
-    db.one(sqlUser.update, user_general).then(
+
+function putUserGeneral(res, user_general){
+    db.oneOrNone(sqlUser.update, user_general).then(
         data => {
-            const status = 200;
-            res.status(status)
+            return data;
+        })
+}
+
+
+function putUser(req, res, next) {
+    db.tx(t => {
+        var queries = [];
+        console.log(req.body);
+        const user_general = req.body.user_general;
+        queries.push(putUserGeneral(res, user_general));
+        const user_address = req.body.user_address;
+        if (user_address != null)
+            queries.push(putUserAddress(res, user_address));
+        const user_preference_new = req.body.user_preferences;
+        if (user_preference_new.length != 0)
+            queries.push(putUserPreferences(res, user_preference_new));
+        const user_target_new = req.body.user_target;
+        if (user_preference_new.length != 0)
+            queries.push(putUserTarget(res, user_target_new));
+        return t.batch(queries)
+    }).then(result => {
+        getUserInfo(res, 1)
+        
+    }).catch(function (error) {
+        const status = 403
+        console.log(error);
+        res.status(status)
             .json({
                 status: status,
-                data: data,
-                message: MESSAGE_OK
+                data: {},
+                message: error.message
             });
-        })
-    // const user_picture = req.body.user_picture;
-    // const user_address = req.body.user_address;
-    // const user_preference = req.body.user_preference;
-    // const user_target = req.body.user_target;
+    });
+}
+
+function putUserAddress(res, user_address){
+    db.tx(t => {
+        return t.oneOrNone(sqlAddress.getByIdUser, { id_user: 1})
+            .then(data => {
+                if (data != null) {
+                    console.log("Updated address");
+                    const address = t.oneOrNone(sqlAddress.update, user_address);
+                    return t.batch([address]);
+                }
+                else {
+                    console.log("Added address");
+                    const address = t.oneOrNone(sqlAddress.add, user_address);
+                    return t.batch([address]);
+                }
+            });
+    }).then(result => {
+        console.log("Updated: putUserAddress")
+        return result;
+    }).catch(function (error) {
+        console.log("Erreur: putUserAddress")
+    });
+}
+
+
+function putUserPreferences(res, user_preference_new){
+    db.tx(t => {
+        return t.any(sqlUserPreference.getByIdUser, { id_user: 1 })
+            .then(user_preference_base => {
+                var queries = [];
+                user_preference_new.forEach(n => {
+                    const index = user_preference_base.findIndex(b => b.id_user == n.id_user && b.id_mbti == n.id_mbti)
+                    if (index == -1)
+                        queries.push(t.oneOrNone(sqlUserPreference.add, n));
+                    else
+                        user_preference_base.splice(index, 1);
+                });
+                user_preference_base.forEach(b => {
+                    queries.push(t.none(sqlUserPreference.delete, b))
+                })
+                return t.batch(queries);
+            })
+    }).then(() => {
+        console.log("Updated: putUserPreferences")
+    }).catch(function (error) {
+        console.log("Erreur: putUserPreferences")
+    });
+}
+
+function putUserTarget(res, user_target_new){
+    db.tx(t => {
+        return t.any(sqlUserTarget.getByIdUser, { id_user: 1 })
+            .then(user_target_base => {
+                var queries = [];
+                user_target_new.forEach(n => {
+                    const index = user_target_base.findIndex(b => b.id_user == n.id_user && b.id_target == n.id_target)
+                    if (index == -1)
+                        queries.push(t.oneOrNone(sqlUserTarget.add, n));
+                    else
+                        user_target_base.splice(index, 1);
+                });
+                user_target_base.forEach(b => {
+                    queries.push(t.none(sqlUserTarget.delete, b))
+                })
+                return t.batch(queries);
+            })
+    }).then(() => {
+        console.log("Updated: putUserTarget")
+    }).catch(function (error) {
+        console.log("Erreur: putUserTarget")
+    });
 
 }
 

@@ -12,7 +12,8 @@ module.exports = {
         add: sql('./address/add.sql'),
         getAll: sql('./address/getAll.sql'),
         getById: sql('./address/getById.sql'),
-        getByIdUser: sql('./address/getByIdUser.sql')
+        getByIdUser: sql('./address/getByIdUser.sql'),
+        update: sql('./address/update.sql')
     },
     target: {
         getAll: sql('./target/getAll.sql'),
@@ -25,6 +26,7 @@ module.exports = {
     users: {
         add: sql('./users/add.sql'),
         getAll: sql('./users/getAll.sql'),
+        getById: sql('./users/getById.sql'),
         getByEmail: sql('./users/getByEmail.sql'),
         update: sql('./users/update.sql')
     },
@@ -33,14 +35,16 @@ module.exports = {
         getAll: sql('./userPreferences/getAll.sql'),
         getById: sql('./userPreferences/getById.sql'),
         getByIdUser: sql('./userPreferences/getByIdUser.sql'),
-        getByIdMBTI: sql('./userPreferences/getByIdMBTI.sql')
+        getByIdMBTI: sql('./userPreferences/getByIdMBTI.sql'),
+        delete: sql('./userPreferences/delete.sql')
     },
     userTarget: {
         add: sql('./userTarget/add.sql'),
         getAll: sql('./userTarget/getAll.sql'),
         getById: sql('./userTarget/getById.sql'),
         getByIdUser: sql('./userTarget/getByIdUser.sql'),
-        getByIdTarget: sql('./userTarget/getByIdTarget.sql')
+        getByIdTarget: sql('./userTarget/getByIdTarget.sql'),
+        delete: sql('./userTarget/delete.sql')
     },
     matches: {
         add: sql('./matches/add.sql'),
