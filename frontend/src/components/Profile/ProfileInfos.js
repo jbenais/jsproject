@@ -13,7 +13,6 @@ import Select from '@material-ui/core/Select';
 import Settings from '@material-ui/icons/Settings';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
-import Map from './Map';
 import { connect } from "react-redux";
 import Slider, { createSliderWithTooltip } from 'rc-slider';
 import 'rc-slider/assets/index.css';
@@ -45,15 +44,9 @@ class ProfileInfos extends React.Component {
             orientation: this.props.data.user_general.id_orientation,
             userProfile: 'ENFJ',
             targetProfiles: this.props.data.user_preferences,
-
+            ageRange: [this.props.data.user_general.age_min, this.props.data.user_general.age_max],
             gendersList: ['Femme', 'Homme'],
             targetsList: [],
-            //orientationsList: [],
-
-            femme: true,
-            homme: true,
-            bi: true,
-
 
         };
 
@@ -61,11 +54,12 @@ class ProfileInfos extends React.Component {
         this.handleOrientationChange = this.handleOrientationChange.bind(this);
         this.editProfile = this.editProfile.bind(this);
         this.fetchDatas = this.fetchDatas.bind(this);
+        this.onRangeChange = this.onRangeChange.bind(this);
+        this.onAgeChange = this.onAgeChange.bind(this);
     }
 
     fetchDatas() {
         let fields = {
-            //'orientation': { 'state': 'orientationsList', 'user': 'orientation', 'field': 'id_orientation' },
             'target': { 'state': 'targetsList', 'user': 'target', 'field': 'id_target' },
             'mbti': { 'state': 'profileList', 'user': 'userProfile', 'field': 'id_mbti' }
         };
@@ -108,6 +102,21 @@ class ProfileInfos extends React.Component {
         });
     }
 
+    handleTargetChange(id) {
+    }
+
+    onRangeChange(value) {
+        this.setState({
+            ageRange: value
+        })
+    }
+
+    onAgeChange(value) {
+        this.setState({
+            maxDistance: value
+        })
+    }
+
     editProfile(value) {
         if (!value) {
             let data = {
@@ -124,14 +133,14 @@ class ProfileInfos extends React.Component {
                     id_orientation: this.state.orientation,
                     id_user: this.props.data.user_general.id,
                     max_distance: this.state.maxDistance,
-                    age_min: 20,
-                    age_max: 30,
+                    age_min: this.state.ageRange[0],
+                    age_max: this.state.ageRange[1]
 
                 },
                 user_address: {
                     id_user: this.props.data.user_general.id,
-                    latitude: 33,
-                    longitude: 33
+                    latitude: this.props.position.lat,
+                    longitude: this.props.position.lng
                 },
                 user_preferences: [{
                     id_user: this.props.data.user_general.id,
@@ -154,6 +163,10 @@ class ProfileInfos extends React.Component {
     componentWillMount() {
         this.fetchDatas();
     }
+
+
+    
+
 
     render() {
         return (
@@ -290,7 +303,7 @@ class ProfileInfos extends React.Component {
                                     }
                                     label={'Homme'}
                                 />
-                                 <FormControlLabel
+                                <FormControlLabel
                                     control={
                                         <Checkbox
                                             checked={this.state.orientation === 3}
@@ -310,7 +323,7 @@ class ProfileInfos extends React.Component {
                             </div>
 
                         <SliderWithTooltip
-                            onChange={this.handleChange('maxDistance')}
+                            onChange={this.onAgeChange}
                             value={this.state.maxDistance}
                             style={{ marginBottom: '20px' }}
                             min={0}
@@ -319,48 +332,24 @@ class ProfileInfos extends React.Component {
                             tipProps={{ visible: true }}
                             disabled={!this.state.edit} tipFormatter={valueFormatter} />
 
-                        <FormControl style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '20px' }}>
-                            <InputLabel htmlFor="select-multiple-chip">Préférences MBTI</InputLabel>
-                            <Select
-                                multiple
-                                disabled={!this.state.edit}
-                                value={this.state.targetProfiles}
-                                onChange={this.handleChange('targetProfiles')}
-                                input={<Input id="select-multiple-chip" />}
-                                renderValue={selected => (
-                                    <div>
-                                        {selected.map(value => <Chip key={value} label={value.name} />)}
-                                    </div>
-                                )}
-                            >
-                                {this.state.profileList.map(profile => (
-                                    <MenuItem
-                                        key={profile.id}
-                                        value={profile.name}>
-                                        {profile.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-
 
 
                         <FormControl component="fieldset">
                             <FormLabel component="legend">Type(s) de relation souhaitée</FormLabel>
                             <FormGroup style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
-                                {this.state.targetsList.map((data, key) => {
+                                {this.state.targetsList.map((elt) => {
                                     return (
                                         <FormControlLabel
-                                            key={key}
+                                            key={elt.id}
                                             control={
                                                 <Checkbox
                                                     style={{ color: '#01D2CB' }}
                                                     disabled={!this.state.edit}
                                                     onChange={this.handleChange('targetsList')}
-                                                    value={data.name}
+                                                    value={elt.name}
                                                 />
                                             }
-                                            label={data.name}
+                                            label={elt.name}
                                         />
                                     )
                                 })}
@@ -374,8 +363,10 @@ class ProfileInfos extends React.Component {
                             disabled={!this.state.edit}
                             allowCross={false}
                             count={2} min={18}
-                            max={55} step={1}
+                            max={65} step={1}
                             defaultValue={[18, 25]}
+                            value={this.state.ageRange}
+                            onChange={this.onRangeChange}
                             tipFormatter={ageFormatter}
                             tipProps={{ visible: true }}
                             style={{ marginBottom: '20px' }}
@@ -407,3 +398,27 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileInfos);
+
+/* <FormControl style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '20px' }}>
+                           <InputLabel htmlFor="select-multiple-chip">Préférences MBTI</InputLabel>
+                           <Select
+                               multiple
+                               disabled={!this.state.edit}
+                               value={this.state.targetProfiles}
+                               onChange={this.handleChange('targetProfiles')}
+                               input={<Input id="select-multiple-chip" />}
+                               renderValue={selected => (
+                                   <div>
+                                       {selected.map(value => <Chip key={value} label={value.name} />)}
+                                   </div>
+                               )}
+                           >
+                               {this.state.profileList.map(profile => (
+                                   <MenuItem
+                                       key={profile.id}
+                                       value={profile.name}>
+                                       {profile.name}
+                                   </MenuItem>
+                               ))}
+                           </Select>
+                       </FormControl>*/
