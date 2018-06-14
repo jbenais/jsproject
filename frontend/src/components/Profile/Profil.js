@@ -10,12 +10,14 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Icon from '@material-ui/core/Icon';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import * as LoginAction from '../../actions/LoginAction';
 import Select from '@material-ui/core/Select';
 import Settings from '@material-ui/icons/Settings';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import Map from './Map';
-import Slider, { Range, createSliderWithTooltip } from 'rc-slider';
+import { connect } from "react-redux";
+import Slider, { createSliderWithTooltip } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 const SliderWithTooltip = createSliderWithTooltip(Slider);
 const RangewithTooltip = createSliderWithTooltip(Slider.Range);
@@ -25,77 +27,67 @@ function valueFormatter(v) {
     return `${v} km`;
 }
 
-let profiles = [];
-
-let targets = [];
-
-const genders = ['Femme', 'Homme'];
-
-let orientations = [];
-
-
 function ageFormatter(value) {
     return `${value}`;
 }
 
-export default class Profil extends React.Component {
+class Profil extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             lastname: this.props.data.user_general.lastname,
             firstname: this.props.data.user_general.firstname,
-            email: this.props.data.user_general.email,
+            birthdate: this.props.data.user_general.birthdate != null ? (this.props.data.user_general.birthdate).split('T', 1)[0] : '2000-01-01',
+            profileList: [],
+            orientation: 'Femme',
             userProfile: 'ENFJ',
             profession: '',
-            targetProfiles: [],
             edit: false,
             description: this.props.data.user_general.description,
-            gender: 'Femme',
-            targets: []
+            gender: this.props.data.user_general.is_male ? 'Homme' : 'Femme',
+            targetProfiles: this.props.data.user_preference,
+            targetsList: [],
+            gendersList: ['Femme', 'Homme'],
+            orientationsList: [],
+
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.editProfile = this.editProfile.bind(this);
+        this.fetchDatas = this.fetchDatas.bind(this);
     }
 
-    componentDidMount() {
-        this.fetchMBTI();
-        this.fetchTarget();
-        this.fetchOrientation();
-    }
-
-    fetchMBTI() {
-        fetch(`http://localhost:8888/mbti`)
-        .then((resp) => resp.json())
-        .then((json) => {
-            profiles = json.data;
-        })
-        .catch(function(error) {
-            console.log('MBTI: Looks like there was a problem: \n', error);
-          });
-    }
-
-    fetchTarget() {
-        fetch(`http://localhost:8888/target`)
-        .then((resp) => resp.json())
-        .then((json) => {                
-                targets = json.data;
-                console.log(targets);
-        })
-        .catch(function(error) {
-            console.log('Targets: Looks like there was a problem: \n', error);
-          });
-    }
-
-    fetchOrientation() {
-        fetch(`http://localhost:8888/orientation`)
-        .then((resp) => resp.json())
-        .then((json) => {                
-                orientations = json.data;
-        })
-        .catch(function(error) {
-            console.log('Orientations: Looks like there was a problem: \n', error);
-          });
+    fetchDatas() {
+        let fields = {
+            'orientation': {'state': 'orientationsList', 'user': 'orientation', 'field': 'id_orientation'},
+            'target': {'state': 'targetsList', 'user': 'target', 'field': 'id_target'},
+            'mbti': {'state': 'profileList', 'user': 'userProfile', 'field': 'id_mbti'}
+        };
+        for (let key in fields) {
+            fetch(`http://localhost:8888/` + key)
+                .then((resp) => resp.json())
+                .then((json) => {
+                    let name = fields[key].state;
+                    let user = fields[key].user;
+                    if (this.props.data.user_general[fields[key].field])
+                    {
+                        this.setState({
+                            [name]: json.data,
+                            [user]: json.data.find(elt => { return elt.id == this.props.data.user_general[fields[key].field] }).name
+                        });
+                    }
+                    else
+                    {
+                        this.setState({
+                            [name]: json.data,
+                        });
+                    }
+                    
+                })
+                .catch(function (error) {
+                    console.log('Looks like there was a problem: \n', error);
+                });
+        }
     }
 
     handleChange(name) {
@@ -106,22 +98,40 @@ export default class Profil extends React.Component {
         });
     }
 
+
     editProfile(value) {
+        console.log(this.state.birthdate);
+        if (!value) {
+            let data = {
+                lastname: this.state.lastname,
+                firstname: this.state.firstname,
+                birthdate: this.state.birthdate,
+                userProfile: this.state.userProfile,
+                profession: this.state.profession,
+                description: this.state.description,
+                gender: this.state.gender,
+                is_male: this.state.gender !== 'Femme',
+                id_mbti: this.state.profileList.find(elt => {return elt.name == this.state.userProfile}).id,
+                id_orientation: this.props.data.user_general.id_orientation,
+                id: this.props.data.user_general.id
+            }
+            this.props.update(data);
+        }
         this.setState({
             edit: value
         })
     }
 
-
+    componentWillMount() {
+        this.fetchDatas();
+    }
     render() {
-        
         const data = this.props.data;
-        console.log(data);
         return (
             <div style={{ display: 'flex', flexDirection: 'row', padding: '20px' }}>
                 <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
                     <div style={{ display: 'flex', justifyContent: 'center', height: '30%' }}>
-                        <img id="img" style={{width: '80%', height: '80%'}} src={data.user_picture[0].url}/>
+                        <img id="img" style={{ width: '80%', height: '80%' }} src={data.user_picture[0].url} />
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'center', fontFamily: 'Roboto', fontWeight: 800, fontSize: '18px', paddingTop: '20px' }}>{data.user_general.firstname} {data.user_general.lastname}</div>
                     <div style={{ display: 'flex', justifyContent: 'center', fontFamily: 'Roboto', fontWeight: 200, paddingBottom: '20px' }}>21 ans</div>
@@ -163,14 +173,7 @@ export default class Profil extends React.Component {
                                 onChange={this.handleChange('firstname')}
                                 margin="normal"
                             />
-                            <TextField
-                                disabled={!this.state.edit}
-                                id="name"
-                                label="Adresse mail"
-                                value={this.state.email}
-                                onChange={this.handleChange('email')}
-                                margin="normal"
-                            />
+                            
                             <TextField
                                 id="select-gender-native"
                                 select
@@ -180,7 +183,7 @@ export default class Profil extends React.Component {
                                 onChange={this.handleChange('gender')}
                                 margin="normal"
                             >
-                                {genders.map(option => (
+                                {this.state.gendersList.map(option => (
                                     <option key={option} value={option}>
                                         {option}
                                     </option>
@@ -191,7 +194,8 @@ export default class Profil extends React.Component {
                                 disabled={!this.state.edit}
                                 id="name"
                                 label="Date de naissance"
-                                value={"1996-11-04 "}
+                                onChange={this.handleChange('birthdate')}
+                                value={this.state.birthdate}
                                 type="date"
                                 margin="normal"
 
@@ -211,7 +215,7 @@ export default class Profil extends React.Component {
                                 onChange={this.handleChange('description')}
                                 multiline
                                 rowsMax="4"
-                                value={data.user_general.description ? data.user_general.description : ""}
+                                value={this.state.description}
                                 margin="normal"
                             />
 
@@ -224,9 +228,9 @@ export default class Profil extends React.Component {
                                 onChange={this.handleChange('userProfile')}
                                 margin="normal"
                             >
-                                {profiles.map(option => (
-                                    <option key={option} value={option}>
-                                        {option}
+                                {this.state.profileList.map(option => (
+                                    <option key={option.id} value={option.name}>
+                                        {option.name}
                                     </option>
                                 ))}
                             </TextField>
@@ -244,47 +248,29 @@ export default class Profil extends React.Component {
                             <FormControl component="fieldset">
                                 <FormLabel component="legend">Attirances sexuelles</FormLabel>
                                 <FormGroup style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
-                                {genders.map((gender, key) => {
-                                    return (
-                                        <FormControlLabel
-                                        key={key}
-                                        control={
-                                            <Checkbox
-                                                style={{ color: '#01D2CB' }}
-                                                disabled={!this.state.edit}
-                                                onChange={this.handleChange('gender')}
-                                                value={gender}
+                                    {this.state.gendersList.map((gender, key) => {
+                                        return (
+                                            <FormControlLabel
+                                                key={key}
+                                                control={
+                                                    <Checkbox
+                                                        style={{ color: '#01D2CB' }}
+                                                        disabled={!this.state.edit}
+                                                        onChange={this.handleChange('gender')}
+                                                        value={gender}
+                                                    />
+                                                }
+                                                label={gender}
                                             />
-                                        }
-                                        label={gender}
-                                    />
-                                    )
-                                })}
+                                        )
+                                    })}
                                 </FormGroup>
                             </FormControl>
-                            <FormControl component="fieldset">
-                                <FormLabel component="legend">Type de relation souhaitée</FormLabel>
-                                <FormGroup style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-                                {targets.map((target) => {
-                                    return (
-                                        <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                style={{ color: '#01D2CB' }}
-                                                disabled={!this.state.edit}
-                                                onChange={this.handleChange('targets')}
-                                                value={target.name}
-                                            />
-                                        }
-                                        label={target}
-                                    />
-                                    )
-                                })}
-                                </FormGroup>
-                            </FormControl>
+                            
                             <div style={{ display: 'flex', fontFamily: 'Roboto', color: "#757575", fontWeight: 400, paddingTop: '20px', paddingBottom: '40px' }}>
                                 Maximum Distance
                             </div>
+                            
                             <SliderWithTooltip style={{ marginBottom: '20px' }} min={0} max={1000} step={50} tipProps={{ visible: true }} disabled={!this.state.edit} tipFormatter={valueFormatter} />
 
                             <FormControl style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '20px' }}>
@@ -292,7 +278,7 @@ export default class Profil extends React.Component {
                                 <Select
                                     multiple
                                     disabled={!this.state.edit}
-                                    value={data.user_preference}
+                                    value={this.state.targetProfiles}
                                     onChange={this.handleChange('targetProfiles')}
                                     input={<Input id="select-multiple-chip" />}
                                     renderValue={selected => (
@@ -301,14 +287,35 @@ export default class Profil extends React.Component {
                                         </div>
                                     )}
                                 >
-                                    {profiles.map(name => (
+                                    {this.state.profileList.map(profile => (
                                         <MenuItem
-                                            key={name}
-                                            value={name}>
-                                            {name}
+                                            key={profile.id}
+                                            value={profile.name}>
+                                            {profile.name}
                                         </MenuItem>
                                     ))}
                                 </Select>
+                            </FormControl>
+                            <FormControl component="fieldset">
+                                <FormLabel component="legend">Type(s) de relation souhaitée</FormLabel>
+                                <FormGroup style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+                                    {this.state.targetsList.map((data, key) => {
+                                        return (
+                                            <FormControlLabel
+                                                key={key}
+                                                control={
+                                                    <Checkbox
+                                                        style={{ color: '#01D2CB' }}
+                                                        disabled={!this.state.edit}
+                                                        onChange={this.handleChange('targetsList')}
+                                                        value={data.name}
+                                                    />
+                                                }
+                                                label={data.name}
+                                            />
+                                        )
+                                    })}
+                                </FormGroup>
                             </FormControl>
                             <div style={{ display: 'flex', fontFamily: 'Roboto', color: "#757575", fontWeight: 400, paddingTop: '20px', paddingBottom: '40px' }}>
                                 Age Range
@@ -338,3 +345,17 @@ export default class Profil extends React.Component {
         )
     }
 }
+const mapStateToProps = (state) => {
+    return {
+    };
+  };
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        update: (response) => {
+            LoginAction.update(response)(dispatch);
+        },
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profil);
