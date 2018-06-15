@@ -54,7 +54,8 @@ CREATE TABLE T_User (
   Age_Min           SMALLINT        NOT NULL DEFAULT 18,
   Age_Max           SMALLINT        NOT NULL DEFAULT 65,
   Id_MBTI           SMALLINT        REFERENCES T_MBTI(Id),
-  Id_Orientation    SMALLINT        REFERENCES T_Orientation(Id)
+  Id_Orientation    SMALLINT        REFERENCES T_Orientation(Id),
+  Is_Completed      BOOLEAN         DEFAULT FALSE
 );
 
 CREATE TABLE T_Address (
@@ -87,7 +88,8 @@ CREATE TABLE T_User_Picture (
 CREATE TABLE T_Matches (
   Id                SERIAL          PRIMARY KEY NOT NULL,
   Id_User           SMALLINT        NOT NULL REFERENCES T_User(Id),
-  Id_User_Love      SMALLINT        NOT NULL REFERENCES T_User(Id),
+  Id_Opposite_User  SMALLINT        NOT NULL REFERENCES T_User(Id),
   Is_Matched        BOOLEAN         NOT NULL DEFAULT FALSE,
-  UNIQUE(Id_User, Id_User_Love)
+  Is_Liked          BOOLEAN         NOT NULL DEFAULT FALSE,
+  UNIQUE(Id_User, Id_Opposite_User)
 );
