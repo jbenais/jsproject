@@ -19,7 +19,7 @@ export default class Profile extends React.Component {
     }
     render() {
         const data = this.props.data;
-        let markers = {lat: data.user_address.latitude, lng: data.user_address.longitude}
+        let markers = {lat: data.user_address ? data.user_address.latitude : null, lng: data.user_address ? data.user_address.longitude : null}
         return ( 
             <div style={{ display: 'flex', flexDirection: 'row', padding: '20px' }}>
                 <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>

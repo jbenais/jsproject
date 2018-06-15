@@ -1,7 +1,5 @@
 import React from 'react';
-const { compose, withProps, withStateHandlers } = require("recompose");
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps";
-const { SearchBox } = require("react-google-maps/lib/components/places/SearchBox");
 
 export default class Map extends React.Component {
     constructor(props) {
@@ -30,14 +28,16 @@ export default class Map extends React.Component {
     }
 
     render() {
+        const markersExist = this.state.markers.position.lat !== null && this.state.markers.position.lng !== null;
         const GoogleMapsComponent =  withScriptjs(withGoogleMap(props => (
             <GoogleMap
+            
                 ref={props.onMapLoad}
                 defaultZoom={1}
                 defaultCenter={props.center}
                 onClick={props.onMapClick}
             >
-                <Marker {...props.markers} />
+            {markersExist ? <Marker {...props.markers}/> : <div/>}
             </GoogleMap>
         )));
 
@@ -51,7 +51,7 @@ export default class Map extends React.Component {
                 containerElement={<div style={{ height: `250px`, width: '90%', margin: '0 auto' }} />}
                 markers={this.state.markers}
                 mapElement={<div style={{ height: `100%` }} />}
-                        />
+            />
             </div>
         )
     }

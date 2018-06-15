@@ -305,6 +305,8 @@ function postUser(req, res, next) {
                 }
                 const url = result.data.image.url;
                 postUserInfo(res, user_general, url);
+            }).catch(error => {
+                console.log("Google error: " + error);
             })
     }
 }
