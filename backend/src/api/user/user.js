@@ -108,6 +108,7 @@ function filter(res, user) {
     const queryObject = user_general.id_orientation == 3 ? createBiObject(user_general) : createMonoObject(user_general);
     db.any(queryFile, queryObject)
         .then(function (possibleUsers) {
+            possibleUsers = possibleUsers.map(x => {return {user_general: x}})
             filterTarget(res, user, possibleUsers).then(possibleUsers => {
                 filterMBTI(res, user, possibleUsers).then(possibleUsers => {
                     filterDistance(res, user, possibleUsers).then(possibleUsers => {
@@ -133,7 +134,7 @@ function filterTarget(res, user, possibleUsers) {
     return db.tx(t => {
         const queries = [];
         possibleUsers.forEach((u) => {
-            const query = t.any(sqlUserTarget.getByIdUser, { id_user: u.id });
+            const query = t.any(sqlUserTarget.getByIdUser, { id_user: u.user_general.id });
             queries.push(query);
         })
         return t.batch(queries);
@@ -165,7 +166,7 @@ function filterMBTI(res, user, possibleUsers) {
     return db.tx(t => {
         const queries = [];
         possibleUsers.forEach((u) => {
-            const query = t.any(sqlUserPreference.getByIdUser, { id_user: u.id });
+            const query = t.any(sqlUserPreference.getByIdUser, { id_user: u.user_general.id });
             queries.push(query);
         })
         return t.batch(queries);
@@ -174,9 +175,9 @@ function filterMBTI(res, user, possibleUsers) {
             possibleUsers[i].user_preference = data[i];
         if (user_preference.length == 0)
             return possibleUsers;
-        return possibleUsers = possibleUsers.filter(x =>
-            isUserPreference(user_preference, x.id_mbti) &&
-            (x.user_preference.length == 0 || isUserPreference(x.user_preference, user.id_mbti)))
+        return possibleUsers.filter(x =>
+            isUserPreference(user_preference, x.user_general.id_mbti) &&
+            (x.user_preference.length == 0 || isUserPreference(x.user_preference, user_general.id_mbti)))
     }
     ).catch(function (error) {
         console.log("Erreur: filterMBTI")
@@ -197,7 +198,7 @@ function filterDistance(res, user, possibleUsers) {
     return db.tx(t => {
         const queries = [];
         possibleUsers.forEach((u) => {
-            const query = t.any(sqlAddress.getByIdUser, { id_user: u.id });
+            const query = t.any(sqlAddress.getByIdUser, { id_user: u.user_general.id });
             queries.push(query);
         })
         return t.batch(queries);
@@ -205,7 +206,7 @@ function filterDistance(res, user, possibleUsers) {
         for (i = 0; i < possibleUsers.length; i++)
             possibleUsers[i].user_address = data[i];
         return possibleUsers.filter(x => 
-            isDistanceCorrect(user_address, x.user_address[0], user_general.max_distance, x.max_distance)
+            isDistanceCorrect(user_address, x.user_address[0], user_general.max_distance, x.user_general.max_distance)
         )
     }
     ).catch(function (error) {
@@ -271,7 +272,6 @@ function computeLimitYear(nbYear) {
     d.setFullYear(d.getFullYear() - nbYear);
     return d;
 }
-
 //#endregion
 
 //#region POST
