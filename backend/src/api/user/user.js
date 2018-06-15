@@ -93,38 +93,65 @@ function getPossibleByIdUser(req, res, next) {
             user_preference: data[2],
             user_target: data[3]
         }
-        parse(res, user);
+        filter(res, user);
     }).catch(function (error) {
         console.log(error);
         console.log("Erreur: getPossibleByIdUser")
     });
 }
 
-function parse(res, user) {
+// Filter by age and sexual orientation
+function filter(res, user) {
     const {user_general} = user
     // Check if user is bisexual
     const queryFile = user_general.id_orientation == 3 ? sqlUser.getBiPossibleByIdUser : sqlUser.getMonoPossibleByIdUser;
     const queryObject = user_general.id_orientation == 3 ? createBiObject(user_general) : createMonoObject(user_general);
     db.any(queryFile, queryObject)
-        .then(function (data) {
-            const status = 200
-            res.status(status)
-                .json({
-                    status: status,
-                    data: data,
-                    message: MESSAGE_OK
-                });
+        .then(function (possibleUsers) {
+            filterTarget(res, user, possibleUsers)
         })
         .catch(function (error) {
-            const status = 403
-            console.log(error);
-            res.status(status)
-                .json({
-                    status: status,
-                    data: {},
-                    message: error.message
-                });
+            console.log("Erreur: filter");
         });
+}
+
+// Can be optimized
+function filterTarget(res, user, possibleUsers){
+    const {user_general, user_address, user_preference, user_target} = user;
+    db.tx(t => {
+        const queries = [];
+        possibleUsers.forEach((u) => {
+            const query = t.any(sqlUserTarget.getByIdUser, { id_user: u.id });
+            queries.push(query);
+        })
+        return t.batch(queries);
+    }).then(data => {
+        for (i = 0; i < possibleUsers.length; i++)
+            possibleUsers[i].user_target = data[i];
+        possibleUsers = possibleUsers.filter(x => x.user_target.length == 0 || containsTarget(user_target, x.user_target))
+        const status = 200;
+        res.status(status)
+        .json({
+            status: status,
+            data: possibleUsers,
+            message: MESSAGE_OK
+        });
+    }
+    ).catch(function (error) {
+        console.log(error);
+        console.log("Erreur: getPossibleByIdUser")
+    });
+}
+
+//Can be optimized
+function containsTarget(user_target, opposite_user_target){
+    let contains = false;
+    user_target.forEach(target => {
+        const condition = opposite_user_target.some(e => e.id_target === target.id_target);
+        if (condition == true)
+            contains = true;
+    })
+    return contains;
 }
 
 function createMonoObject(user_general){
