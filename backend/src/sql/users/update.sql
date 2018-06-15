@@ -9,6 +9,7 @@ UPDATE t_user SET
     age_min = ${age_min},
     age_max = ${age_max},
     id_mbti = ${id_mbti},
-    id_orientation = ${id_orientation}
+    id_orientation = ${id_orientation},
+    is_completed = ${is_completed}
 WHERE id = ${id_user}
 RETURNING *

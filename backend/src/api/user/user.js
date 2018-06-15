@@ -376,6 +376,12 @@ function putUser(req, res, next) {
         const user_address = req.body.user_address;
         const user_target_new = req.body.user_target;
 
+        const { birthdate, is_male, id_mbti, id_orientation } = user_general;
+        if (birthdate != null && is_male != null && id_mbti != null && id_orientation != null && user_address != null)
+            user_general.is_completed = true;
+        else
+            user_general.is_completed = false;
+
         queries.push(putUserGeneral(user_general, id));
         if (user_address != null)
             queries.push(putUserAddress(user_address, id));
