@@ -43,11 +43,13 @@ class ProfileInfos extends React.Component {
             profileList: [],
             orientation: this.props.data.user_general.id_orientation,
             userProfile: 'ENFJ',
-            targetProfiles: this.props.data.user_preferences,
+            targetProfiles: [],
             ageRange: [this.props.data.user_general.age_min, this.props.data.user_general.age_max],
             gendersList: ['Femme', 'Homme'],
             targetsList: [],
-
+            // This one corresponds to the chosen targets
+            user_target: [],
+            user_preferences: this.props.data.user_preferences
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -56,6 +58,13 @@ class ProfileInfos extends React.Component {
         this.fetchDatas = this.fetchDatas.bind(this);
         this.onRangeChange = this.onRangeChange.bind(this);
         this.onAgeChange = this.onAgeChange.bind(this);
+    }
+
+    fillTargetProfile() {
+        this.props.data.user_preferences.forEach(key => {
+            let name = this.state.profileList.find(elt => {return elt.id == key.id_mbti}).name;
+            this.state.targetProfiles.push(name);
+        });
     }
 
     fetchDatas() {
@@ -80,7 +89,7 @@ class ProfileInfos extends React.Component {
                             [name]: json.data,
                         });
                     }
-
+                    this.fillTargetProfile()
                 })
                 .catch(function (error) {
                     console.log('Looks like there was a problem: \n', error);
@@ -90,10 +99,46 @@ class ProfileInfos extends React.Component {
 
     handleChange(name) {
         return (event => {
+                this.setState({
+                    [name]: event.target.value,
+                })
+        });
+    }
+    handleChangeCheckbox(name) {
+        return (event => {
+            let elt = {
+                "id_user": this.props.data.user_general.id,
+                "id_target": this.state.targetsList.find(function(e) { return e.name == event.target.value }).id
+            };
+            if (event.target.checked) {
+                this.state[name].push(elt);
+            } else {
+                let idx = -1;
+                this.state[name].forEach((element, index) => {
+                    if (element.id_target == elt.id_target)
+                        idx = index;
+                });
+                if (idx != -1)
+                    this.state[name].splice(idx, 1);
+            }
+        });
+    }
+
+    handleChangeMenuItem(name) {
+        return (event => {
             this.setState({
                 [name]: event.target.value,
-            })
-        });
+            });
+            let datas = [];
+            event.target.value.forEach((elt, index) => {
+                let idx = this.state.profileList.find(elm => { return elm.name == elt}).id
+                datas.push({
+                    "id_user": this.props.data.user_general.id,
+                    "id_mbti": idx
+                });
+            });
+            this.state.user_preferences = datas;
+        });    
     }
 
     handleOrientationChange(id) {
@@ -142,14 +187,8 @@ class ProfileInfos extends React.Component {
                     latitude: this.props.position.lat,
                     longitude: this.props.position.lng
                 },
-                user_preferences: [{
-                    id_user: this.props.data.user_general.id,
-                    id_mbti: 2,
-                }],
-                user_target: [{
-                    id_user: this.props.data.user_general.id,
-                    id_target: 1
-                }]
+                user_preferences: this.state.user_preferences,
+                user_target: this.state.user_target
 
             }
             console.log(data);
@@ -164,11 +203,7 @@ class ProfileInfos extends React.Component {
         this.fetchDatas();
     }
 
-
-    
-
-
-    render() {
+    render() {        
         return (
             <div style={{ display: 'flex', flex: 3, flexDirection: 'column', }}>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '20px' }}>
@@ -332,27 +367,48 @@ class ProfileInfos extends React.Component {
                             tipProps={{ visible: true }}
                             disabled={!this.state.edit} tipFormatter={valueFormatter} />
 
+                        <FormControl style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '20px' }}>
+                            <InputLabel htmlFor="select-multiple-chip">Préférences MBTI</InputLabel>
+                            <Select
+                                multiple={true}
+                                disabled={!this.state.edit}
+                                value={this.state.targetProfiles}
+                                onChange={this.handleChangeMenuItem('targetProfiles')}
+                                input={<Input id="select-multiple-chip" />}
+                                renderValue={selected => (
+                                    <div>
+                                        {selected.map(value => <Chip key={value} label={value.name} />)}
+                                    </div>
+                                )}
+                            >
+                                {this.state.profileList.map(profile => (
+                                    <MenuItem
+                                        key={profile.id}
+                                        value={profile.name}>
+                                        {profile.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
 
 
                         <FormControl component="fieldset">
                             <FormLabel component="legend">Type(s) de relation souhaitée</FormLabel>
                             <FormGroup style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
-                                {this.state.targetsList.map((elt) => {
-                                    return (
+                                { this.state.targetsList.map((elt) => (
                                         <FormControlLabel
                                             key={elt.id}
                                             control={
                                                 <Checkbox
                                                     style={{ color: '#01D2CB' }}
                                                     disabled={!this.state.edit}
-                                                    onChange={this.handleChange('targetsList')}
+                                                    onChange={this.handleChangeCheckbox('user_target')}
                                                     value={elt.name}
                                                 />
                                             }
                                             label={elt.name}
                                         />
-                                    )
-                                })}
+                                ))}
                             </FormGroup>
                         </FormControl>
 
@@ -398,27 +454,3 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileInfos);
-
-/* <FormControl style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '20px' }}>
-                           <InputLabel htmlFor="select-multiple-chip">Préférences MBTI</InputLabel>
-                           <Select
-                               multiple
-                               disabled={!this.state.edit}
-                               value={this.state.targetProfiles}
-                               onChange={this.handleChange('targetProfiles')}
-                               input={<Input id="select-multiple-chip" />}
-                               renderValue={selected => (
-                                   <div>
-                                       {selected.map(value => <Chip key={value} label={value.name} />)}
-                                   </div>
-                               )}
-                           >
-                               {this.state.profileList.map(profile => (
-                                   <MenuItem
-                                       key={profile.id}
-                                       value={profile.name}>
-                                       {profile.name}
-                                   </MenuItem>
-                               ))}
-                           </Select>
-                       </FormControl>*/
