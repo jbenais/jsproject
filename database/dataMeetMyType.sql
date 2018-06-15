@@ -78,4 +78,41 @@ INSERT INTO t_user
          (DEFAULT, 'jim.parsons@gmail.com', 'Jim', 'Parsons', '24/03/1973', true, 'I like men', 'I m going to be the big bang of your life', 700, 20, 30, 7, 1),
          (DEFAULT, 'zac.efron@gmail.com', 'Zac ', 'Efron', '18/10/1987', true, 'I like women', 'Be my prom girl', 700, 20, 30, 8, 2),
          (DEFAULT, 'donald.glover@gmail.com', 'Donald ', 'Glover', '25/09/1983', true, 'I like women', 'I m Childish Gambino', 100, 20, 30, 10, 2),
-         (DEFAULT, 'sam.smith@gmail.com', 'Sam', 'Smith', '25/09/1983', true, 'I like both', 'Stay with me', 100, 20, 30, 7, 3)
+         (DEFAULT, 'sam.smith@gmail.com', 'Sam', 'Smith', '25/09/1983', true, 'I like both', 'Stay with me', 100, 20, 30, 7, 3);
+
+/*
+  Natalie Portman : Homme
+  Brigitte Bardot : Homme
+  Ellen DeGeneres : Femme
+  Cara Delevingne : Bi
+  Freddie Mercury : Homme
+  Jim Parsons     : Homme
+  Zac Efron       : Femme
+  Donald Glover   : Femme
+  Sam Smith       : Bi
+*/
+
+
+/*
+  Natalie Portman : Relation sérieuse
+  Brigitte Bardot : TOUT
+  Ellen DeGeneres : Partenaire de travail
+  Cara Delevingne : Amitié et plus / Amitie
+  Freddie Mercury : Amitié et plus
+  Jim Parsons     : Amitie / Partenaire de travail
+  Zac Efron       : Relation sérieuse / Amitié
+  Donald Glover   : TOUT
+  Sam Smith       : Relation sérieuse 
+*/
+
+INSERT INTO t_user_target
+  VALUES (DEFAULT, 1, 1),
+         (DEFAULT, 3, 3),
+         (DEFAULT, 4, 2),
+         (DEFAULT, 4, 3),
+         (DEFAULT, 5, 2),
+         (DEFAULT, 6, 3),
+         (DEFAULT, 6, 4),
+         (DEFAULT, 7, 1),
+         (DEFAULT, 7, 3),
+         (DEFAULT, 9, 1);
