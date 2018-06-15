@@ -95,7 +95,6 @@ function getPossibleByIdUser(req, res, next) {
         }
         filter(res, user);
     }).catch(function (error) {
-        console.log(error);
         console.log("Erreur: getPossibleByIdUser")
     });
 }
@@ -108,7 +107,24 @@ function filter(res, user) {
     const queryObject = user_general.id_orientation == 3 ? createBiObject(user_general) : createMonoObject(user_general);
     db.any(queryFile, queryObject)
         .then(function (possibleUsers) {
-            filterTarget(res, user, possibleUsers)
+            filterTarget(res, user, possibleUsers).then(d => {
+                filterMBTI(res, user, d).then(possibleUsers => {
+                    const status = 200;
+                    res.status(status)
+                    .json({
+                        status: status,
+                        data: possibleUsers,
+                        message: MESSAGE_OK
+                    });
+                });
+                // const status = 200;
+                // res.status(status)
+                // .json({
+                //     status: status,
+                //     data: d,
+                //     message: MESSAGE_OK
+                // });
+            });
         })
         .catch(function (error) {
             console.log("Erreur: filter");
@@ -118,7 +134,7 @@ function filter(res, user) {
 // Can be optimized
 function filterTarget(res, user, possibleUsers){
     const {user_general, user_address, user_preference, user_target} = user;
-    db.tx(t => {
+    return db.tx(t => {
         const queries = [];
         possibleUsers.forEach((u) => {
             const query = t.any(sqlUserTarget.getByIdUser, { id_user: u.id });
@@ -128,18 +144,10 @@ function filterTarget(res, user, possibleUsers){
     }).then(data => {
         for (i = 0; i < possibleUsers.length; i++)
             possibleUsers[i].user_target = data[i];
-        possibleUsers = possibleUsers.filter(x => x.user_target.length == 0 || containsTarget(user_target, x.user_target))
-        const status = 200;
-        res.status(status)
-        .json({
-            status: status,
-            data: possibleUsers,
-            message: MESSAGE_OK
-        });
+        return possibleUsers = possibleUsers.filter(x => x.user_target.length == 0 || containsTarget(user_target, x.user_target))
     }
     ).catch(function (error) {
-        console.log(error);
-        console.log("Erreur: getPossibleByIdUser")
+        console.log("Erreur: filterTarget")
     });
 }
 
@@ -150,8 +158,40 @@ function containsTarget(user_target, opposite_user_target){
         const condition = opposite_user_target.some(e => e.id_target === target.id_target);
         if (condition == true)
             contains = true;
-    })
+    });
     return contains;
+}
+
+function filterMBTI(res, user, possibleUsers){
+    const {user_general, user_address, user_preference, user_target} = user;
+    return db.tx(t => {
+        const queries = [];
+        possibleUsers.forEach((u) => {
+            const query = t.any(sqlUserPreference.getByIdUser, { id_user: u.id });
+            queries.push(query);
+        })
+        return t.batch(queries);
+    }).then(data => {
+        for (i = 0; i < possibleUsers.length; i++)
+            possibleUsers[i].user_preference = data[i];
+        return possibleUsers = possibleUsers.filter(x => 
+            (user_preference.length == 0) || 
+            isUserPreference(user_preference, x.id_mbti) && 
+            (x.user_preference.length == 0 || isUserPreference(x.user_preference, user.id_mbti)))
+    }
+    ).catch(function (error) {
+        console.log(error);
+        console.log("Erreur: filterMBTI")
+    });
+}
+
+function isUserPreference(user_preference, opposite_user_mbti){
+    for (i = 0; i < user_preference.length; i++){
+        const condition = user_preference.some(e => e.id_mbti === opposite_user_mbti);
+        if (condition)
+            return true;
+    }
+    return false;
 }
 
 function createMonoObject(user_general){
