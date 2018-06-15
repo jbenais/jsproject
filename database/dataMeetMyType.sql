@@ -116,3 +116,26 @@ INSERT INTO t_user_target
          (DEFAULT, 7, 1),
          (DEFAULT, 7, 3),
          (DEFAULT, 9, 1);
+
+/*
+  Natalie Portman : Paris
+  Brigitte Bardot : Lyon
+  Ellen DeGeneres : Lyon
+  Cara Delevingne : Paris
+  Freddie Mercury : Marseille
+  Jim Parsons     : Gouvieux
+  Zac Efron       : Paris
+  Donald Glover   : Paris
+  Sam Smith       : Marseille
+*/
+
+INSERT INTO t_address
+  VALUES (DEFAULT, 1, 48.856614, 2.3522219000000177),
+         (DEFAULT, 2, 45.764043, 4.835658999999964),
+         (DEFAULT, 3, 45.764043, 4.835658999999964),
+         (DEFAULT, 4, 48.856614, 2.3522219000000177),
+         (DEFAULT, 5, 43.296482, 5.369779999999992),
+         (DEFAULT, 6, 49.192878, 2.4093359999999393),
+         (DEFAULT, 7, 48.856614, 2.3522219000000177),
+         (DEFAULT, 8, 48.856614, 2.3522219000000177),
+         (DEFAULT, 9, 43.296482, 5.369779999999992)
