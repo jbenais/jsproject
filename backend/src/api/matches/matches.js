@@ -84,32 +84,31 @@ function getMatchesByIdUser(req, res, next) {
 //#region POST
 
 function postMatches(req, res, next) {
-    console.log('Here');
-    const userMatches = req.body.user_matches;
+    const { id_user, id_opposite_user, is_liked } = req.body.user_matches;
+    console.log(is_liked);
     const userOppositeMatch = {
-        id_user: userMatches.id_user_love,
-        id_user_love: userMatches.id_user
+        id_user: id_opposite_user,
+        id_opposite_user: id_user
     };
     db.tx(t => {
-            return t.oneOrNone(sqlMatches.getByIdUsers, userOppositeMatch)
-                .then(data => {
-                    if (data) {
-                        console.log("Match");
-                        const user = createMatchesJson(userMatches.id_user, userMatches.id_user_love, true);
-                        const addQuery = t.one(sqlMatches.add, user);
-                        const putQuery =  t.none(sqlMatches.update, {
-                            is_matched: true,
-                            id: data.id
-                        });
-                        return addQuery;
+        return t.oneOrNone(sqlMatches.getByIdUsers, userOppositeMatch)
+            .then(data => {
+                if (data) {
+                    const is_matched = is_liked && data.is_liked;
+                    const user = createMatchesJson(id_user, id_opposite_user, is_matched, is_liked);
+                    if (is_matched){
+                        console.log("Match !");
+                        t.none(sqlMatches.update, { is_matched: true, id: data.id });
                     }
-                    else{
-                        console.log("No match");
-                        const user = createMatchesJson(userMatches.id_user, userMatches.id_user_love, false);
-                        return t.one(sqlMatches.add, user);
-                    }
-                });
-        })
+                    return t.one(sqlMatches.add, user);;
+                }
+                else {
+                    console.log("No match");
+                    const user = createMatchesJson(id_user, id_opposite_user, false, is_liked);
+                    return t.one(sqlMatches.add, user);
+                }
+            });
+    })
         .then(data => {
             const status = 200
             res.status(status)
@@ -131,11 +130,12 @@ function postMatches(req, res, next) {
         });
 }
 
-function createMatchesJson(id_user, id_user_love, isMatched){
+function createMatchesJson(idUser, idOppositeUser, isMatched, isLiked) {
     return {
-        id_user: id_user,
-        id_user_love: id_user_love,
-        is_matched: isMatched
+        id_user: idUser,
+        id_opposite_user: idOppositeUser,
+        is_matched: isMatched,
+        is_liked: isLiked
     }
 }
 //#endregion
