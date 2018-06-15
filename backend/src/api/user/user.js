@@ -1,6 +1,7 @@
 const db = require('../index');
 const { google } = require('googleapis');
 const FB = require('fb').default;
+const geolib = require('geolib');
 const sqlUser = require('../../sql').users;
 const sqlAddress = require('../../sql').address;
 const sqlPicture = require('../../sql').userPicture;
@@ -101,29 +102,24 @@ function getPossibleByIdUser(req, res, next) {
 
 // Filter by age and sexual orientation
 function filter(res, user) {
-    const {user_general} = user
+    const { user_general } = user;
     // Check if user is bisexual
     const queryFile = user_general.id_orientation == 3 ? sqlUser.getBiPossibleByIdUser : sqlUser.getMonoPossibleByIdUser;
     const queryObject = user_general.id_orientation == 3 ? createBiObject(user_general) : createMonoObject(user_general);
     db.any(queryFile, queryObject)
         .then(function (possibleUsers) {
-            filterTarget(res, user, possibleUsers).then(d => {
-                filterMBTI(res, user, d).then(possibleUsers => {
-                    const status = 200;
-                    res.status(status)
-                    .json({
-                        status: status,
-                        data: possibleUsers,
-                        message: MESSAGE_OK
+            filterTarget(res, user, possibleUsers).then(possibleUsers => {
+                filterMBTI(res, user, possibleUsers).then(possibleUsers => {
+                    filterDistance(res, user, possibleUsers).then(possibleUsers => {
+                        const status = 200;
+                        res.status(status)
+                            .json({
+                                status: status,
+                                data: possibleUsers,
+                                message: MESSAGE_OK
+                            });
                     });
                 });
-                // const status = 200;
-                // res.status(status)
-                // .json({
-                //     status: status,
-                //     data: d,
-                //     message: MESSAGE_OK
-                // });
             });
         })
         .catch(function (error) {
@@ -132,8 +128,8 @@ function filter(res, user) {
 }
 
 // Can be optimized
-function filterTarget(res, user, possibleUsers){
-    const {user_general, user_address, user_preference, user_target} = user;
+function filterTarget(res, user, possibleUsers) {
+    const { user_general, user_address, user_preference, user_target } = user;
     return db.tx(t => {
         const queries = [];
         possibleUsers.forEach((u) => {
@@ -144,7 +140,9 @@ function filterTarget(res, user, possibleUsers){
     }).then(data => {
         for (i = 0; i < possibleUsers.length; i++)
             possibleUsers[i].user_target = data[i];
-        return possibleUsers = possibleUsers.filter(x => x.user_target.length == 0 || containsTarget(user_target, x.user_target))
+        if (!user_target.length)
+            return possibleUsers;
+        return possibleUsers.filter(x => x.user_target.length == 0 || containsTarget(user_target, x.user_target))
     }
     ).catch(function (error) {
         console.log("Erreur: filterTarget")
@@ -152,7 +150,7 @@ function filterTarget(res, user, possibleUsers){
 }
 
 //Can be optimized
-function containsTarget(user_target, opposite_user_target){
+function containsTarget(user_target, opposite_user_target) {
     let contains = false;
     user_target.forEach(target => {
         const condition = opposite_user_target.some(e => e.id_target === target.id_target);
@@ -162,8 +160,8 @@ function containsTarget(user_target, opposite_user_target){
     return contains;
 }
 
-function filterMBTI(res, user, possibleUsers){
-    const {user_general, user_address, user_preference, user_target} = user;
+function filterMBTI(res, user, possibleUsers) {
+    const { user_general, user_address, user_preference, user_target } = user;
     return db.tx(t => {
         const queries = [];
         possibleUsers.forEach((u) => {
@@ -174,19 +172,19 @@ function filterMBTI(res, user, possibleUsers){
     }).then(data => {
         for (i = 0; i < possibleUsers.length; i++)
             possibleUsers[i].user_preference = data[i];
-        return possibleUsers = possibleUsers.filter(x => 
-            (user_preference.length == 0) || 
-            isUserPreference(user_preference, x.id_mbti) && 
+        if (user_preference.length == 0)
+            return possibleUsers;
+        return possibleUsers = possibleUsers.filter(x =>
+            isUserPreference(user_preference, x.id_mbti) &&
             (x.user_preference.length == 0 || isUserPreference(x.user_preference, user.id_mbti)))
     }
     ).catch(function (error) {
-        console.log(error);
         console.log("Erreur: filterMBTI")
     });
 }
 
-function isUserPreference(user_preference, opposite_user_mbti){
-    for (i = 0; i < user_preference.length; i++){
+function isUserPreference(user_preference, opposite_user_mbti) {
+    for (i = 0; i < user_preference.length; i++) {
         const condition = user_preference.some(e => e.id_mbti === opposite_user_mbti);
         if (condition)
             return true;
@@ -194,8 +192,55 @@ function isUserPreference(user_preference, opposite_user_mbti){
     return false;
 }
 
-function createMonoObject(user_general){
-    const {id, is_male, id_orientation, age_max, age_min} = user_general
+function filterDistance(res, user, possibleUsers) {
+    const { user_general, user_address, user_preference, user_target } = user;
+    return db.tx(t => {
+        const queries = [];
+        possibleUsers.forEach((u) => {
+            const query = t.any(sqlAddress.getByIdUser, { id_user: u.id });
+            queries.push(query);
+        })
+        return t.batch(queries);
+    }).then(data => {
+        for (i = 0; i < possibleUsers.length; i++)
+            possibleUsers[i].user_address = data[i];
+        return possibleUsers.filter(x => 
+            isDistanceCorrect(user_address, x.user_address[0], user_general.max_distance, x.max_distance)
+        )
+    }
+    ).catch(function (error) {
+        console.log(error);
+        console.log("Erreur: filterDistance")
+    });
+}
+
+function isDistanceCorrect(user_address, opposite_user_address, user_maxDistance, opposite_maxDistance) {
+    const distance = computeDistance(user_address, opposite_user_address);
+    const userMaxDistance = user_maxDistance * 1000;
+    const oppositeUserMaxDistance = opposite_maxDistance * 1000;
+    if (distance <= userMaxDistance && distance <= oppositeUserMaxDistance)
+        return true;
+    return false;
+}
+
+function computeDistance(user_address, opposite_user_address) {
+    const origin = {
+        latitude: user_address.latitude,
+        longitude: user_address.longitude,
+    };
+    const destination = {
+        latitude: opposite_user_address.latitude,
+        longitude: opposite_user_address.longitude,
+    };
+    const distance = geolib.getDistanceSimple(
+        origin,
+        destination
+    );
+    return distance;
+}
+
+function createMonoObject(user_general) {
+    const { id, is_male, id_orientation, age_max, age_min } = user_general
     const op_orientation_first = is_male ? 1 : 2;
     const op_orientation_second = 3;
     return {
@@ -208,8 +253,8 @@ function createMonoObject(user_general){
     }
 }
 
-function createBiObject(user_general){
-    const {id, is_male, age_max, age_min} = user_general
+function createBiObject(user_general) {
+    const { id, is_male, age_max, age_min } = user_general
     const op_orientation_first = is_male ? 1 : 2;
     const op_orientation_second = 3;
     return {
@@ -221,7 +266,7 @@ function createBiObject(user_general){
     }
 }
 
-function computeLimitYear(nbYear){
+function computeLimitYear(nbYear) {
     let d = new Date();
     d.setFullYear(d.getFullYear() - nbYear);
     return d;

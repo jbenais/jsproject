@@ -102,5 +102,5 @@ module.exports = {
     getAllAddress,
     getSingleAddressById,
     getSingleAddressByUserId,
-    postAddress
+    postAddress,
 };
