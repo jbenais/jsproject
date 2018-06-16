@@ -310,7 +310,7 @@ function postUser(req, res, next) {
     const is_google = req.body.is_google;
     if (!is_google) {
         const accessToken = req.body.data.access_token;
-        FB.api('me', { fields: ['email', 'first_name', 'last_name', 'birthday', 'picture'], access_token: accessToken },
+        FB.api('me', { fields: ['email', 'first_name', 'last_name', 'birthday', 'picture.type(large)'], access_token: accessToken },
             (result) => {
                 const user_general = {
                     'email': result.email,
