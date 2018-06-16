@@ -93,3 +93,31 @@ CREATE TABLE T_Matches (
   Is_Liked          BOOLEAN         NOT NULL DEFAULT FALSE,
   UNIQUE(Id_User, Id_Opposite_User)
 );
+
+CREATE TABLE T_Channel (
+  Id                SERIAL          PRIMARY KEY NOT NULL,
+  Id_User_One       SMALLINT        NOT NULL REFERENCES T_User(Id),
+  Id_User_Two       SMALLINT        NOT NULL REFERENCES T_User(Id),
+  Uuid              VARCHAR(64)     NOT NULL,
+  UNIQUE(Id_User_One, Id_User_Two, Uuid)
+);
+
+CREATE TABLE T_Notification (
+  Id                SERIAL          PRIMARY KEY NOT NULL,
+  Id_User           SMALLINT        NOT NULL REFERENCES T_User(Id),
+  Id_Channel        SMALLINT        NOT NULL REFERENCES T_Channel(Id),
+  Is_Read           BOOLEAN         NOT NULL DEFAULT FALSE,
+  UNIQUE(Id_User, Id_Channel)
+);
+
+CREATE TYPE CONTENT_TYPE AS ENUM ('message', 'picture', 'audio', 'video', 'other');
+
+CREATE TABLE T_Messages (
+  Id                SERIAL          PRIMARY KEY NOT NULL,
+  Id_Sender         SMALLINT        NOT NULL REFERENCES T_User(Id),
+  Id_Receiver       SMALLINT        NOT NULL REFERENCES T_User(Id),
+  Content           VARCHAR(256)    NOT NULL,    
+  Content_Type      CONTENT_TYPE    NOT NULL DEFAULT 'message',
+  Created_At        TIMESTAMP       NOT NULL,
+  Id_Channel        SMALLINT        NOT NULL REFERENCES T_Channel(Id)
+);
