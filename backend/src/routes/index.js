@@ -10,6 +10,7 @@ const userPreferences = require('./userPreferences');
 const userTarget = require('./userTarget');
 const matches = require('./matches');
 const userPictures = require('./userPictures');
+const channel = require('./channel');
 
 router.use('/mbti', mbti);
 router.use('/orientation', orientation);
@@ -20,6 +21,7 @@ router.use('/user_preferences', userPreferences);
 router.use('/user_target', userTarget);
 router.use('/matches', matches);
 router.use('/user_pictures', userPictures);
+router.use('/channel', channel);
 
 router.get('/', function(req, res, next) {
     res.status(200);
