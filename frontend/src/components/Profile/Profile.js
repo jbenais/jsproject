@@ -1,6 +1,7 @@
 import React from 'react';
 import Map from './Map';
 import ProfileInfos from './ProfileInfos';
+
 export default class Profile extends React.Component {
     constructor(props) {
         super(props);
@@ -21,16 +22,18 @@ export default class Profile extends React.Component {
         const data = this.props.data;
         let markers = {lat: data.user_address ? data.user_address.latitude : null, lng: data.user_address ? data.user_address.longitude : null}
         return ( 
-            <div style={{ display: 'flex', flexDirection: 'row', padding: '20px' }}>
-                <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
-                    <div style={{ display: 'flex', justifyContent: 'center', }}>
+            <div id="container">
+                <div className="left">
+                    <div className="picture">
                         <img id="img" style={{ width: '50%', height: '50%' }} src={data.user_picture[0].url} />
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'center', fontFamily: 'Roboto', fontWeight: 800, fontSize: '18px', paddingTop: '20px' }}>{data.user_general.firstname} {data.user_general.lastname}</div>
-                    <div style={{ display: 'flex', justifyContent: 'center', fontFamily: 'Roboto', fontWeight: 200, paddingBottom: '20px' }}>21 ans</div>
+                    <div className="full-name">
+                        {data.user_general.firstname} {data.user_general.lastname
+                    }</div>
+                    <div className="map">21 ans</div>
                     <Map center={this.state.mapCenter} markers={markers} onMapClick={this.handleMarkers}/>
                 </div>
-                <div style={{display: 'flex', flex: 2, justifyContent: 'center'}}>
+                <div className="profile-infos">
                     <ProfileInfos position={this.state.markers} data={this.props.data}/>
                 </div>
             </div>

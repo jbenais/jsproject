@@ -8,7 +8,7 @@ import About from './About/About';
 import Messages from './Messages/Messages';
 import Matches from './Matches/Matches';
 import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 
 class Home extends React.Component {
     constructor(props) {
@@ -28,7 +28,7 @@ class Home extends React.Component {
     render() {
         return (
             <div>
-                <div style={{ display: 'flex', alignItems: 'center', background: 'linear-gradient(to right, #F7798E , #F48477)', height: '100px' }}>
+                <div className="header">
                     <div style={{ margin: '0 auto' }}>
                         <div id="logo">
                             <div id="meet" style={{ color: 'white' }}>
@@ -40,8 +40,7 @@ class Home extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <p>{this.props.loginReducer.user_general.firstname}</p>
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                    <div className="poweroff">
                         <IconButton aria-label="Delete" onClick={this.props.logout}>
                             <PowerSettingsNew />
                         </IconButton>

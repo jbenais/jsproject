@@ -49,12 +49,11 @@ class Login extends React.Component {
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
                             <Logo />
                         </div>
-                        <div style={{ display: 'flex', fontFamily: 'Roboto', fontWeight: 400, fontSize: '20px', justifyContent: 'center', paddingTop: '30px', textAlign: 'center' }}>
+                        <div className="tagline">
                             Trouver l'amour selon son profil&nbsp; <b>MBTI</b>
                         </div>
                         <div id="fb">
                             <div style={{ width: '75%' }}>
-
                                 <FacebookLogin
                                     cssClass="btnFacebook"
                                     textButton="CONNEXION AVEC FACEBOOK"
