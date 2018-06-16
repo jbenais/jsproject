@@ -39,7 +39,6 @@ export function update(res) {
 			type:      'UPDATE',
 			payload:    ''
 	};
-	console.log(res);
 	console.log({
 		user_general: res.user_general,
 		user_address: res.user_address,

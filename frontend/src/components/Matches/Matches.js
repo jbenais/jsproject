@@ -2,49 +2,72 @@ import React from 'react';
 import Favorite from '@material-ui/icons/Favorite';
 import Dislike from '@material-ui/icons/ThumbDown';
 import Button from '@material-ui/core/Button';
-export default class Matches extends React.Component {
+import { connect } from 'react-redux';
+import MatchesAction from '../../actions/MatchesAction';
+import { BounceLoader } from 'react-spinners';
+
+
+class Matches extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            usersMatched: [],
-            users: [
-                {
-                    firstname: 'Julia',
-                    profession: 'ÉTUDIANTE',
-                    profile: 'ENFJ',
-                    age: '18 ans',
-                    description: 'Lorem Ipsum dolor je suis trop belle trop swag',
-                },
-                {
-                    firstname: 'Lola',
-                    profession: 'CUISINIÈRE',
-                    profile: 'ENTJ',
-                    age: '20 ans',
-                    description: 'Lorem Ipsum dolor je n’ai pas besoin de description ma gueule je suis un cuisinier trop swag',
-                },]
+            usersToMatch: [],
+            usersMatched: [{id_user: 1, id_user_love: 2}]
         }
     }
 
+    componentDidMount() {
+
+    }
+
+    componentWillMount() {
+        fetch('http://localhost:8888/user/' + this.props.id + '/users', {
+			method: 'GET',
+			headers: {
+				'ACCEPT': 'application/json, text/plain, */*',
+				'Content-type': 'application/json'
+            },
+		})
+		.then((resp) => resp.json())
+		.then((response) => {
+			this.setState({
+                usersToMatch: response.data
+            })
+        });    
+    }
+    
+    
     removeFromList() {
         this.setState({
-            users: this.state.users.splice(1, 1)
+            usersToMatch: this.state.usersToMatch.splice(1, 1)
         })
     }
 
-    addToMatched(user) {
-        this.setState({
-            usersMatched: this.state.usersMatched.push(this.state.users[0])
-        })
+    addToMatched() {
+        const userMatched = this.state.usersMatched[0];
+        let data = {
+            id_user: this.props.id,
+            id_user_love: userMatched.id
+        }
+        this.props.match(data);
+        /*this.setState({
+            usersMatched: this.state.usersMatched.concat(this.state.usersToMatch[0])
+        })*/
         this.removeFromList();
     }
 
     render() {
-        console.log(this.state.users);
-        console.log('length: ' + this.state.users.length)
-        if (this.state.users.length === 0) {
+        return (
+            <div>
+            <Button variant="fab" onClick={this.addToMatched.bind(this)} style={{ color: '#22D894', backgroundColor: 'white', boxShadow: 'none' }} aria-label="add">
+            <Favorite />
+        </Button>
+        </div>
+        )
+        /*if (this.state.usersToMatch.length === 0) {
             return (
-                <div style={{ display: 'flex', height: '100vh', justifyContent: 'center' }}>
-                    POUR L'INSTANT PAS DE DONNÉES
+                <div style={{ display: 'flex', height: '100vh', justifyContent: 'center', alignItems: 'center' }}>
+                   <BounceLoader color={"#36D7B7"} loading={true}/>
                 </div>
             )
         }
@@ -58,22 +81,22 @@ export default class Matches extends React.Component {
                             </div>
                             <div style={{ display: 'flex', flex: 3, flexDirection: 'column', justifyContent: 'center' }}>
                                 <div style={{ display: 'flex', fontFamily: 'Roboto', fontWeight: 700, fontSize: '26px', color: '#55545E', letterSpacing: 1 }}>
-                                    {this.state.users[0].firstname}
+                                    {this.state.usersToMatch[0].firstname}
                                 </div>
                                 <div style={{ display: 'flex', color: '#F58180', fontFamily: 'Roboto', fontWeight: 500 }}>
-                                    {this.state.users[0].profession.toUpperCase()}
+                                    {this.state.usersToMatch[0].profession.toUpperCase()}
                                 </div>
                             </div>
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', fontFamily: 'Roboto', fontWeight: 300 }}>
                             <div style={{ display: 'flex' }}>
-                                {this.state.users[0].profile}
+                                {this.state.usersToMatch[0].profile}
                             </div>
                             <div style={{ display: 'flex' }}>
                                 -
                        </div>
                             <div style={{ display: 'flex' }}>
-                                {this.state.users[0].age}
+                                {this.state.usersToMatch[0].age}
                             </div>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '30px' }}>
@@ -82,7 +105,7 @@ export default class Matches extends React.Component {
                                     DESCRIPTION
                             </div>
                                 <div style={{ textAlign: 'center', fontFamily: 'Roboto', fontWeight: 300, color: '#3E3E3E', fontSize: '18px', padding: '30px' }}>
-                                    {this.state.users[0].description}
+                                    {this.state.usersToMatch[0].description}
                                 </div>
                             </div>
                         </div>
@@ -91,12 +114,28 @@ export default class Matches extends React.Component {
                         <Button variant="fab" onClick={this.removeFromList.bind(this)} style={{ color: '#FF5D65', backgroundColor: 'white', boxShadow: 'none' }} aria-label="add">
                             <Dislike />
                         </Button>
-                        <Button variant="fab" /*onClick={this.addToMatched(this.state.users[0])}*/ style={{ color: '#22D894', backgroundColor: 'white', boxShadow: 'none' }} aria-label="add">
+                        <Button variant="fab" onClick={() => this.addToMatched} style={{ color: '#22D894', backgroundColor: 'white', boxShadow: 'none' }} aria-label="add">
                             <Favorite />
                         </Button>
                     </div>
                 </div>
             </div>
-        )
+        )*/
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        ...state.matchesReducer
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        update: (response) => {
+            MatchesAction.match(response)(dispatch);
+        },
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Matches);
