@@ -64,13 +64,12 @@ module.exports = {
         add: sql('./channel/add.sql'),
         getAll: sql('./channel/getAll.sql'),
         getByIdUsers: sql('./channel/getByIdUsers.sql'),
-    }
-    //,
-    // messages:{
-    //     add: sql('./messages/add.sql'),
-    //     getAll: sql('./messages/getAll.sql'),
-    //     getByDate: sql('./messages/getByDate.sql'),  
-    // },
+    },
+    messages:{
+        add: sql('./messages/add.sql'),
+        getAll: sql('./messages/getAll.sql'),
+        getMessageBeforeDate: sql('./messages/getMessageBeforeDate.sql'),  
+    },
     // notification:{
     //     add: sql('./notification/add.sql'),
     //     getAll: sql('./notification/getAll.sql'),
