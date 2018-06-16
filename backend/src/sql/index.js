@@ -70,11 +70,12 @@ module.exports = {
         getAll: sql('./messages/getAll.sql'),
         getMessageBeforeDate: sql('./messages/getMessageBeforeDate.sql'),  
     },
-    // notification:{
-    //     add: sql('./notification/add.sql'),
-    //     getAll: sql('./notification/getAll.sql'),
-    //     getByIdUserChannel: sql('./notification/getByIdUserChannel.sql'),  
-    // }
+    notification:{
+        add: sql('./notification/add.sql'),
+        getAll: sql('./notification/getAll.sql'),
+        getByIdUserChannel: sql('./notification/getByIdUserChannel.sql'),  
+        update: sql('./notification/update.sql')
+    }
 };
 
 function sql(file) {

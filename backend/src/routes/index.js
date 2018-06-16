@@ -12,6 +12,7 @@ const matches = require('./matches');
 const userPictures = require('./userPictures');
 const channel = require('./channel');
 const messages = require('./messages');
+const notification = require('./notification');
 
 router.use('/mbti', mbti);
 router.use('/orientation', orientation);
@@ -24,6 +25,8 @@ router.use('/matches', matches);
 router.use('/user_pictures', userPictures);
 router.use('/channel', channel);
 router.use('/messages', messages);
+router.use('/notification', notification);
+
 
 router.get('/', function(req, res, next) {
     res.status(200);
