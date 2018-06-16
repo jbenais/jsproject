@@ -7,6 +7,7 @@ const sqlAddress = require('../../sql').address;
 const sqlPicture = require('../../sql').userPicture;
 const sqlUserPreference = require('../../sql').userPreferences;
 const sqlUserTarget = require('../../sql').userTarget;
+const sqlMatches = require('../../sql').matches;
 
 const MESSAGE_OK = 'OK';
 
@@ -94,7 +95,17 @@ function getPossibleByIdUser(req, res, next) {
             user_preference: data[2],
             user_target: data[3]
         }
-        filter(res, user);
+        if (user.user_general.is_completed)
+            filter(res, user);
+        else {
+            const status = 200;
+            res.status(status)
+                .json({
+                    status: status,
+                    data: [],
+                    message: "Veuillez finir de compléter votre profil"
+                });
+        }
     }).catch(function (error) {
         console.log("Erreur: getPossibleByIdUser")
     });
@@ -104,27 +115,46 @@ function getPossibleByIdUser(req, res, next) {
 function filter(res, user) {
     const { user_general } = user;
     // Check if user is bisexual
+    console.log(user_general.id_orientation);
     const queryFile = user_general.id_orientation == 3 ? sqlUser.getBiPossibleByIdUser : sqlUser.getMonoPossibleByIdUser;
     const queryObject = user_general.id_orientation == 3 ? createBiObject(user_general) : createMonoObject(user_general);
     db.any(queryFile, queryObject)
         .then(function (possibleUsers) {
-            possibleUsers = possibleUsers.map(x => {return {user_general: x}})
-            filterTarget(res, user, possibleUsers).then(possibleUsers => {
-                filterMBTI(res, user, possibleUsers).then(possibleUsers => {
-                    filterDistance(res, user, possibleUsers).then(possibleUsers => {
-                        const status = 200;
-                        res.status(status)
-                            .json({
-                                status: status,
-                                data: possibleUsers,
-                                message: MESSAGE_OK
-                            });
+            possibleUsers = possibleUsers.filter(x => x.is_completed).map(x => { return { user_general: x } })
+            filterMatches(res, user, possibleUsers).then(possibleUsers => {
+                filterTarget(res, user, possibleUsers).then(possibleUsers => {
+                    filterMBTI(res, user, possibleUsers).then(possibleUsers => {
+                        filterDistance(res, user, possibleUsers).then(possibleUsers => {
+                            const status = 200;
+                            res.status(status)
+                                .json({
+                                    status: status,
+                                    data: possibleUsers,
+                                    message: MESSAGE_OK
+                                });
+                        });
                     });
                 });
             });
         })
         .catch(function (error) {
+            console.log(error);
             console.log("Erreur: filter");
+        });
+}
+
+function filterMatches(res, user, possibleUsers) {
+    const id_user = user.user_general.id;
+    return db.any(sqlMatches.getByIdUser, { id_user: id_user })
+        .then(data => {
+            data.forEach(n => {
+                const index = possibleUsers.findIndex(b => b.user_general.id == n.id_opposite_user)
+                if (index != -1)
+                    possibleUsers.splice(index, 1);
+            });
+            return possibleUsers;
+        }).catch(function (error) {
+            console.log("Erreur: filterMatches")
         });
 }
 
@@ -205,7 +235,7 @@ function filterDistance(res, user, possibleUsers) {
     }).then(data => {
         for (i = 0; i < possibleUsers.length; i++)
             possibleUsers[i].user_address = data[i];
-        return possibleUsers.filter(x => 
+        return possibleUsers.filter(x =>
             isDistanceCorrect(user_address, x.user_address[0], user_general.max_distance, x.user_general.max_distance)
         )
     }
@@ -219,6 +249,7 @@ function isDistanceCorrect(user_address, opposite_user_address, user_maxDistance
     const distance = computeDistance(user_address, opposite_user_address);
     const userMaxDistance = user_maxDistance * 1000;
     const oppositeUserMaxDistance = opposite_maxDistance * 1000;
+
     if (distance <= userMaxDistance && distance <= oppositeUserMaxDistance)
         return true;
     return false;
