@@ -47,7 +47,7 @@ class ProfileInfos extends React.Component {
             ageRange: [this.props.data.user_general.age_min, this.props.data.user_general.age_max],
             gendersList: ['Femme', 'Homme'],
             targetsList: [],
-            // This one corresponds to the chosen targets
+            
             user_target: [],
             user_preferences: this.props.data.user_preferences
         };
@@ -63,7 +63,8 @@ class ProfileInfos extends React.Component {
     fillTargetProfile() {
         this.props.data.user_preferences.forEach(key => {
             let name = this.state.profileList.find(elt => {return elt.id == key.id_mbti}).name;
-            this.state.targetProfiles.push(name);
+            let id = this.state.profileList.find(elt => {return elt.id == key.id_mbti}).id;
+            this.state.targetProfiles.push({id: id, name: name});
         });
     }
 
@@ -131,7 +132,8 @@ class ProfileInfos extends React.Component {
             });
             let datas = [];
             event.target.value.forEach((elt, index) => {
-                let idx = this.state.profileList.find(elm => { return elm.name == elt}).id
+                console.log(elt);
+                let idx = this.state.profileList.find(elm => { return elm.id == elt.id}).id
                 datas.push({
                     "id_user": this.props.data.user_general.id,
                     "id_mbti": idx
@@ -182,11 +184,11 @@ class ProfileInfos extends React.Component {
                     age_max: this.state.ageRange[1]
 
                 },
-                user_address: {
+                user_address: this.props.position.lat !== null && this.props.position.lng !== null ? {
                     id_user: this.props.data.user_general.id,
                     latitude: this.props.position.lat,
                     longitude: this.props.position.lng
-                },
+                } : null,
                 user_preferences: this.state.user_preferences,
                 user_target: this.state.user_target
 
@@ -203,11 +205,11 @@ class ProfileInfos extends React.Component {
         this.fetchDatas();
     }
 
-    render() {        
+    render() {
         return (
             <div style={{ display: 'flex', flex: 3, flexDirection: 'column', }}>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '20px' }}>
-                    <div style={{}}>
+                    <div>
                         <Button onClick={() => this.editProfile(true)}>
                             <Settings />
                         </Button>

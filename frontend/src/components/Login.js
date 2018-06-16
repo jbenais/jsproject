@@ -4,7 +4,6 @@ import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login';
 import * as LoginAction from '../actions/LoginAction';
 import { connect } from "react-redux";
-import { resolve } from 'path';
 
 class Login extends React.Component {
     constructor(props) {
@@ -35,8 +34,6 @@ class Login extends React.Component {
                 is_google: false
             };
             this.props.login(data);
-            //this.props.onLogin
-
         }
         
     }
@@ -63,7 +60,6 @@ class Login extends React.Component {
                                     textButton="CONNEXION AVEC FACEBOOK"
                                     appId="1070554803153257"
                                     autoLoad={true}
-                                    //cookie={true}
                                     scope="public_profile, email, user_birthday"
                                     fields="name,email,picture, birthday, gender"
                                     callback={this.responseFacebook.bind(this)} />

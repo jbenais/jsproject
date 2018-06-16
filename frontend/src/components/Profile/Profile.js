@@ -5,7 +5,7 @@ export default class Profile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            markers: {lat: 0, lng: 0},
+            markers: {lat: null, lng: null},
             mapCenter: {lat: 14, lng: 12}
         }
         this.handleMarkers = this.handleMarkers.bind(this);
