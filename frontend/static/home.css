@@ -1,0 +1,16 @@
+.header {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(to right, #F7798E , #F48477);
+    height: 100px
+}
+
+.poweroff {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.white {
+    color: white;
+}

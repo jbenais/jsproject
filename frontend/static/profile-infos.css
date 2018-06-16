@@ -1,0 +1,105 @@
+.profile-infos-content {
+    display: flex;
+    flex: 3;
+    flex-direction: column;
+}
+
+.button-edit {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px
+}
+
+
+.main-infos-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.main-infos-background {
+    display: flex;
+    background-color: white;
+    flex-direction: column;
+    padding: 20px;
+    width: 45%
+}
+
+.main-infos-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly
+}
+
+.main-infos-text {
+    display: flex;
+    font-family: 'Roboto';
+    font-weight: 700;
+    font-size: 18px;
+    color: #4C4C4C 
+}
+
+.dating-infos-container {
+    display: flex;
+    background-color: white;
+    flex-direction: column;
+    padding: 20px;
+    width: 45%;
+}
+
+.dating-infos-background {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-bottom: 30px
+}
+
+.dating-infos-text {
+    display: flex;
+    font-family: 'Roboto';
+    font-weight: 700;
+    font-size: 18px;
+    color: #4C4C4C;
+    margin-bottom: 20px
+}
+
+.orientation {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around
+}
+
+.max-distance-text {
+    display: flex;
+    font-family: 'Roboto';
+    color: #757575;
+    font-weight: 400;
+    padding-top: 20px;
+    padding-bottom: 40px
+}
+
+.relation-type-text {
+    display: flex;
+    font-family: 'Roboto';
+    color: #757575;
+    font-weight: 400;
+    padding-top: 20px;
+    padding-bottom: 40px
+}
+
+.target-switches {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around
+}
+
+.age-range-text {
+    display: flex;
+    font-family: 'Roboto';
+    color: #757575;
+    font-weight: 400;
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
