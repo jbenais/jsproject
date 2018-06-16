@@ -115,7 +115,6 @@ function getPossibleByIdUser(req, res, next) {
 function filter(res, user) {
     const { user_general } = user;
     // Check if user is bisexual
-    console.log(user_general.id_orientation);
     const queryFile = user_general.id_orientation == 3 ? sqlUser.getBiPossibleByIdUser : sqlUser.getMonoPossibleByIdUser;
     const queryObject = user_general.id_orientation == 3 ? createBiObject(user_general) : createMonoObject(user_general);
     db.any(queryFile, queryObject)

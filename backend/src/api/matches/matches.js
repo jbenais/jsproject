@@ -85,7 +85,6 @@ function getMatchesByIdUser(req, res, next) {
 
 function postMatches(req, res, next) {
     const { id_user, id_opposite_user, is_liked } = req.body.user_matches;
-    console.log(is_liked);
     const userOppositeMatch = {
         id_user: id_opposite_user,
         id_opposite_user: id_user

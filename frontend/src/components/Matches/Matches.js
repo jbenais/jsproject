@@ -86,20 +86,20 @@ export default class Matches extends React.Component {
             }
         }
         console.log('res');
-        console.log(res);
         fetch('http://localhost:8888/matches', {
             method: 'POST',
             headers: {
                 'ACCEPT': 'application/json, text/plain, */*',
                 'Content-type': 'application/json'
             },
-            body: {
+            body: 
+            JSON.stringify({
                 user_matches: {
                     id_user: this.props.id,
-                    id_opposite_user: userMatched.id,
+                    id_opposite_user: userMatched.user_general.id,
                     is_liked: liked
                 }
-            }
+            })
         })
         .then((resp) => resp.json())
             .then((response) => {
@@ -111,7 +111,7 @@ export default class Matches extends React.Component {
 
     render() {
         if (this.state.usersToMatch.length === 0) {
-            this.interval = setInterval(this.fetchMatches, 5000);
+            // this.interval = setInterval(this.fetchMatches, 5000);
             return (
                 <div style={{ display: 'flex', height: '100vh', justifyContent: 'center', alignItems: 'center' }}>
                     <BounceLoader color={"#36D7B7"} loading={true} />
