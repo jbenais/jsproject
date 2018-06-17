@@ -1,6 +1,9 @@
+const uuidv4 = require('uuid/v4');
 const db = require('../index');
 const MESSAGE_OK = 'OK';
 const sqlMatches = require('../../sql').matches;
+const sqlChannel = require('../../sql').channel;
+const sqlNotification = require('../../sql').notification;
 
 //#region GET
 
@@ -93,13 +96,18 @@ function postMatches(req, res, next) {
         return t.oneOrNone(sqlMatches.getByIdUsers, userOppositeMatch)
             .then(data => {
                 if (data) {
+                    let queries = [];
                     const is_matched = is_liked && data.is_liked;
                     const user = createMatchesJson(id_user, id_opposite_user, is_matched, is_liked);
                     if (is_matched){
                         console.log("Match !");
-                        t.none(sqlMatches.update, { is_matched: true, id: data.id });
+                        queries.push(t.any(sqlMatches.update, { is_matched: true, id: data.id }));
+                        queries.push(createMessageService(id_user, id_opposite_user));
+                        queries.push(t.one(sqlMatches.add, user));
                     }
-                    return t.one(sqlMatches.add, user);;
+                    else
+                        queries.push(t.one(sqlMatches.add, user));
+                    return t.batch(queries);
                 }
                 else {
                     console.log("No match");
@@ -108,12 +116,12 @@ function postMatches(req, res, next) {
                 }
             });
     })
-        .then(data => {
+        .then(() => {
             const status = 200
             res.status(status)
                 .json({
                     status: status,
-                    data: data,
+                    data: {},
                     message: MESSAGE_OK
                 });
         })
@@ -129,13 +137,41 @@ function postMatches(req, res, next) {
         });
 }
 
+function createMessageService(id_user, id_opposite_user){
+    const channel = { "id_user_one": id_user, "id_user_two": id_opposite_user };
+    channel.uuid = uuidv4();
+    return db.tx(t => {
+        return t.one(sqlChannel.add, channel)
+            .then(data => {
+                const notificationOne = createNotificationJson(id_user, data.id);
+                const notificationTwo = createNotificationJson(id_opposite_user, data.id);
+                const queryOne = t.oneOrNone(sqlNotification.add, notificationOne);
+                const queryTwo = t.oneOrNone(sqlNotification.add, notificationTwo);
+                return t.batch([queryOne, queryTwo])
+            });
+    })
+        .then(() => {
+            console.log("Created messaging service !");
+        })
+        .catch(error => {
+            console.log("Erreur: createMessageService")
+        });
+}
+
 function createMatchesJson(idUser, idOppositeUser, isMatched, isLiked) {
     return {
         id_user: idUser,
         id_opposite_user: idOppositeUser,
         is_matched: isMatched,
         is_liked: isLiked
-    }
+    };
+}
+
+function createNotificationJson(idUser, idChannel){
+    return {
+        id_user: idUser,
+        id_channel: idChannel
+    };
 }
 //#endregion
 
