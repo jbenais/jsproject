@@ -126,13 +126,15 @@ function filter(res, user) {
                 filterTarget(res, user, possibleUsers).then(possibleUsers => {
                     filterMBTI(res, user, possibleUsers).then(possibleUsers => {
                         filterDistance(res, user, possibleUsers).then(possibleUsers => {
-                            const status = 200;
-                            res.status(status)
-                                .json({
-                                    status: status,
-                                    data: possibleUsers,
-                                    message: MESSAGE_OK
-                                });
+                            filterPicture(possibleUsers).then(possibleUsers => {
+                                const status = 200;
+                                res.status(status)
+                                    .json({
+                                        status: status,
+                                        data: possibleUsers,
+                                        message: MESSAGE_OK
+                                    });
+                            });
                         });
                     });
                 });
@@ -148,6 +150,24 @@ function filterBasic(birthdate, opposite_age_min, opposite_age_max, opposite_isC
     const date_upperBound = computeLimitYear(opposite_age_min);
     const date_lowerBound = computeLimitYear(opposite_age_max);
     return opposite_isCompleted && (date_lowerBound <= birthdate) && (birthdate <= date_upperBound);
+}
+
+function filterPicture(possibleUsers) {
+    return db.tx(t => {
+        const queries = [];
+        possibleUsers.forEach((u) => {
+            const query = t.any(sqlPicture.getByIdUser, { id_user: u.user_general.id });
+            queries.push(query);
+        })
+        return t.batch(queries);
+    }).then(data => {
+        for (i = 0; i < possibleUsers.length; i++)
+            possibleUsers[i].user_picture = data[i];
+        return possibleUsers;
+    }
+    ).catch(function (error) {
+        console.log("Erreur: filterPicture")
+    });
 }
 
 function filterMatches(res, user, possibleUsers) {
