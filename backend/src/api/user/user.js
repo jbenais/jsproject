@@ -144,12 +144,13 @@ function filter(res, user) {
 
 function filterMatches(res, user, possibleUsers) {
     const id_user = user.user_general.id;
-    return db.any(sqlMatches.getByIdUser, { id_user: id_user })
+    return db.any(sqlMatches.getOngoingByIdUser, { id_user: id_user })
         .then(data => {
             data.forEach(n => {
-                const index = possibleUsers.findIndex(b => b.user_general.id == n.id_opposite_user)
-                if (index != -1)
+                const index = possibleUsers.findIndex(b => b.user_general.id == n.id_opposite_user);
+                if (index != -1){
                     possibleUsers.splice(index, 1);
+                }
             });
             return possibleUsers;
         }).catch(function (error) {
@@ -471,7 +472,7 @@ function putUserPreferences(user_preference_new, id) {
             .then(user_preference_base => {
                 var queries = [];
                 user_preference_new.forEach(n => {
-                    const index = user_preference_base.findIndex(b => b.id_user == n.id_user && b.id_mbti == n.id_mbti)
+                    const index = user_preference_base.findIndex(b => b.id_user == n.id_user && b.id_mbti == n.id_mbti);
                     if (index == -1)
                         queries.push(t.oneOrNone(sqlUserPreference.add, n));
                     else

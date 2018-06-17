@@ -54,6 +54,7 @@ module.exports = {
         getById: sql('./matches/getById.sql'),
         getByIdUser: sql('./matches/getByIdUser.sql'),
         getByIdUsers: sql('./matches/getByIdUsers.sql'),
+        getOngoingByIdUser: sql('./matches/getOngoingByIdUser.sql'),
         update: sql('./matches/update.sql')
     },
     userPicture:{
