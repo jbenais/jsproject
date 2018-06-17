@@ -29,8 +29,6 @@ export default class Conversation extends React.Component {
 
     
       setMessage(data){
-        console.log("data");
-        console.log(data);
         this.setState({
             messages: this.state.messages.concat(data.messageDB)
         })
@@ -67,14 +65,12 @@ export default class Conversation extends React.Component {
         const user = this.props.user;
         const opposite_user = this.props.opposite_user;
         const messages = this.state.messages;
-        console.log("messages");
-        console.log(messages);
         return (
             <div style={{ display: 'flex', flexDirection: 'column', width: '80%', padding: '20px', border: '1px solid grey', borderRadius: '5px' }}>
                 {messages.map((message, id) => {
-                    return <Message key={message.id} content={message.content}/>
+                    return <Message key={message.id} data={message}/>
                 })}
-                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
                     <TextField
                         id="multiline-flexible"
                         label="Message"
@@ -83,7 +79,9 @@ export default class Conversation extends React.Component {
                         onChange={this.handleChange('content')}
                         margin="normal"
                     />
-                    <Button onClick={this.sendMessage}>Send</Button>
+                    <Button
+                    style={{backgroundColor: '#01D2CB', color: 'white', borderRadius: '20px', height: '40px'}}
+                     onClick={this.sendMessage}>Send</Button>
                 </div>
             </div>
         )
