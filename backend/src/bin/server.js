@@ -1,6 +1,8 @@
-const app = require('../app')
-const socket = require('socket.io')
+const app = require('../app');
+const socket = require('socket.io');
+const moment = require('moment');
 
+const dbMessage = require('../api/messages/messages')
 const PORT_NUMBER = 8888;
 
 const server = app.listen(PORT_NUMBER, () => {
@@ -18,18 +20,21 @@ io.on('connection', (socket) => {
 
     socket.on('message', function(data){
         const {channel, message, user, opposite_user} = data;
+        console.log(Date.now());
+        const created_at = moment();
         const messageDB = {
             id_sender: user.id,
             id_receiver: opposite_user.id,
             content: message.content,
             content_type: message.content_type,
-            created_at: Date.now(),
-            channel: channel.uuid
+            created_at: created_at,
+            id_channel: channel.id
         };
         console.log(`${user.firstname} emit to room ${channel.uuid}`)
         messageDB.sender_name = user.firstname;
         messageDB.receiver_name = opposite_user.firstname;
         io.in(channel.uuid).emit('message', {messageDB});
+        dbMessage.postMessageSocket(messageDB);
     });
 
     socket.on('leaveRoom', (data) => {

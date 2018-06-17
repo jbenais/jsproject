@@ -74,8 +74,19 @@ function postMessage(req, res, next) {
         });
 }
 
+function postMessageSocket(message) {
+    db.one(sqlMessages.add, message)
+        .then(() => {
+            console.log(`Message posted by user with id ${message.id_sender}`);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
 module.exports = {
     getAllMessages,
     getMessageBeforeDate,
-    postMessage
+    postMessage,
+    postMessageSocket
 };
