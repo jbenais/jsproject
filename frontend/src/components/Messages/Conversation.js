@@ -1,12 +1,16 @@
 import React from 'react';
 
-
+// JULIA: Display des messages avec un input en bas et un event (bouton send / enter)
 export default class Conversation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
         }
+    }
+
+
+    componentWillMount() {
+        this.fetchMatches()
     }
 
     render() {
