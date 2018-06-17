@@ -1,4 +1,5 @@
 import React from 'react';
+import { log } from 'util';
 import Message from './Message';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -23,16 +24,15 @@ export default class Conversation extends React.Component {
         socket.emit('enterRoom', {
             channel: this.state.opposite_user.channel
         });
-        socket.on('message', function(data){
-            const {messageDB} = data;
-            alert(`${messageDB.sender_name} said ${messageDB.content}`);
-            setMessage(messageDB);
-        });
+        socket.on('message', this.setMessage);
       }
 
-    setMessage(data){
+    
+      setMessage(data){
+        console.log("data");
+        console.log(data);
         this.setState({
-            messages: this.state.messages.push({content: data})
+            messages: this.state.messages.concat(data.messageDB)
         })
     }
 
