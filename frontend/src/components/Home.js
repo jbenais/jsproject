@@ -58,7 +58,7 @@ class Home extends React.Component {
                     <Tab label="Profil" />
                 </Tabs>
                     {this.state.value === 0 && <About />}
-                    {this.state.value === 1 && <Matches id={this.props.loginReducer.user_general.id}/>}
+                    {this.state.value === 1 && <Matches data={this.props.loginReducer.user_general}/>}
                     {this.state.value === 2 && <Messages />}
                     {this.state.value === 3 && <Profile data={this.props.loginReducer}/>}
             </div >

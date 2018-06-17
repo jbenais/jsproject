@@ -23,7 +23,8 @@
     "react-redux": "^5.0.7",
     "react-spinners": "^0.3.2",
     "redux": "^4.0.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "url-loader": "^1.0.1"
   },
   "scripts": {
     "start": "./node_modules/.bin/webpack-dev-server --hot --config ./config/webpack/server.js",

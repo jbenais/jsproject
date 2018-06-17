@@ -20,11 +20,11 @@ export default class Matches extends React.Component {
         super(props);
         this.state = {
             usersToMatch: [],
-            usersMatched: [],
             profilesList: [],
         }
         this.fetchMatches = this.fetchMatches.bind(this);
         this.fetchProfiles = this.fetchProfiles.bind(this);
+        this.removeFromList = this.removeFromList.bind(this);
     }
 
     componentWillUnmount() {
@@ -41,15 +41,13 @@ export default class Matches extends React.Component {
         })
             .then((resp) => resp.json())
             .then((response) => {
-                console.log('reponse');
-                console.log(response);
                 this.setState({
                     profilesList: response.data
                 })
             })
     }
     fetchMatches() {
-        fetch('http://localhost:8888/user/' + this.props.id + '/users', {
+        fetch('http://localhost:8888/user/' + this.props.data.id + '/users', {
             method: 'GET',
             headers: {
                 'ACCEPT': 'application/json, text/plain, */*',
@@ -58,8 +56,6 @@ export default class Matches extends React.Component {
         })
             .then((resp) => resp.json())
             .then((response) => {
-                console.log('reponse');
-                console.log(response);
                 this.setState({
                     usersToMatch: response.data
                 })
@@ -73,19 +69,20 @@ export default class Matches extends React.Component {
 
 
     removeFromList() {
-
+        this.setState({
+            usersToMatch: this.state.usersToMatch.splice(0, 1)
+        })
     }
 
     addToMatched(liked) {
         const userMatched = this.state.usersToMatch[0];
         const res = {
             user_matches: {
-                id_user: this.props.id,
+                id_user: this.props.data.id,
                 id_opposite_user: userMatched.user_general.id,
                 is_liked: liked
             }
         }
-        console.log('res');
         fetch('http://localhost:8888/matches', {
             method: 'POST',
             headers: {
@@ -95,7 +92,7 @@ export default class Matches extends React.Component {
             body: 
             JSON.stringify({
                 user_matches: {
-                    id_user: this.props.id,
+                    id_user: this.props.data.id,
                     id_opposite_user: userMatched.user_general.id,
                     is_liked: liked
                 }
@@ -104,16 +101,21 @@ export default class Matches extends React.Component {
         .then((resp) => resp.json())
             .then((response) => {
                 console.log(response);
+                this.removeFromList();
             })
         .catch((res) => console.log(res))
-        //this.removeFromList();
     }
 
     render() {
+        const completed = this.props.data.is_completed;
         if (this.state.usersToMatch.length === 0) {
-            // this.interval = setInterval(this.fetchMatches, 5000);
+            this.interval = setInterval(this.fetchMatches, 10000);
             return (
-                <div style={{ display: 'flex', height: '100vh', justifyContent: 'center', alignItems: 'center' }}>
+
+                <div style={{ display: 'flex', height: '100vh', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '50px' }}>
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                        {completed ? "Nous recherchons des profils compatibles autour de vous..." :  "Veuillez terminer de configurer votre profil" }
+                    </div>
                     <BounceLoader color={"#36D7B7"} loading={true} />
                 </div>
             )
