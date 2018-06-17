@@ -124,8 +124,6 @@ export default class Matches extends React.Component {
         } else {
             clearInterval(this.interval);
             let currentUser = this.state.usersToMatch[0];
-            console.log("current user infos");
-            console.log(currentUser);
             let birthdate = calculageAge(currentUser.user_general.birthdate);
             const profile = this.state.profilesList.find(elt => currentUser.user_general.id_mbti === elt.id)
             const profileName = profile ? profile.name : "N/A"
@@ -135,7 +133,7 @@ export default class Matches extends React.Component {
                         <div className="match-background">
                             <div className="match-main-content">
                                 <div className="match-img">
-                                    <img id="img" width="140px" height="140px" src="https://picsum.photos/200/300"/>
+                                    <img id="img" width="140px" height="140px" src={currentUser.user_picture[0].url}/>
                                 </div>
                                 <div className="match-main-infos">
                                     <div className="match-firstname">
