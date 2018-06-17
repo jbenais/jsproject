@@ -9,7 +9,7 @@ export default class Usage extends React.Component {
 
     render() {
         return (
-            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', paddingBottom: '50px', fontFamily: 'Roboto', fontWeight: 600 }}>
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap', paddingBottom: '50px', fontFamily: 'Roboto', fontWeight: 600 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <div id="settings" style={{ marginBottom: '20px' }} />
                     <div>CONFIGURE TON PROFIL</div>

@@ -8,7 +8,7 @@ export default class Concept extends React.Component {
 
     render() {
         return (
-            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap' }}>
                 <div style={{ display: 'flex', width: '45%' }}>
                     <div style={{ margin: '30px', width: '600px', height: '600px', backgroundRepeat: 'no-repeat' }} id="love" />
                 </div>
