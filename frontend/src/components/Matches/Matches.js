@@ -98,11 +98,12 @@ export default class Matches extends React.Component {
                 }
             })
         })
-        .then((resp) => resp.json())
-            .then((response) => {
-                console.log(response);
+        .then(resp => resp.json())
+        .then((response) => {
+                console.log("response from match");
+                console.log(response.data);
                 this.removeFromList();
-            })
+        })
         .catch((res) => console.log(res))
     }
 
@@ -123,8 +124,11 @@ export default class Matches extends React.Component {
         } else {
             clearInterval(this.interval);
             let currentUser = this.state.usersToMatch[0];
+            console.log("current user infos");
+            console.log(currentUser);
             let birthdate = calculageAge(currentUser.user_general.birthdate);
-            let profile = this.state.profilesList.find(elt => currentUser.user_general.id_mbti === elt.id).name
+            const profile = this.state.profilesList.find(elt => currentUser.user_general.id_mbti === elt.id)
+            const profileName = profile ? profile.name : "N/A"
             return (
                 <div className="matches-content">
                     <div className="current-match-content">
@@ -149,13 +153,13 @@ export default class Matches extends React.Component {
                             </div>
                             <div className="match-other-content">
                                 <div style={{ display: 'flex' }}>
-                                    {profile}
+                                    MBTI: {profileName}
                                 </div>
                                 <div style={{ display: 'flex' }}>
                                     -
                                 </div>
                                 <div style={{ display: 'flex' }}>
-                                    {birthdate ? `${birthdate} ans` : 'Age non communiqué'}
+                                    Age: {birthdate ? `${birthdate} ans` : 'Age non communiqué'}
                                 </div>
                             </div>
                             <div className="match-description-content">
