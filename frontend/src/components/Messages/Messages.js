@@ -14,7 +14,7 @@ export default class Messages extends React.Component {
         return (
             <div style={{display: 'flex', flexDirection: 'row'}}>
                 <div style={{display: 'flex', flex: 1}}>
-                    <MatchesList/>
+                    <MatchesList id={this.props.id}/>
                 </div>
                 <div style={{display: 'flex', flex: 4}}>
                     <Conversation/>
