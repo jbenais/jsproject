@@ -17,7 +17,9 @@
     "googleapis": "^32.0.0",
     "nodemon": "^1.17.5",
     "pg": "^7.4.3",
-    "pg-promise": "^8.4.4"
+    "pg-promise": "^8.4.4",
+    "socket.io": "^2.1.1",
+    "uuid": "^3.2.1"
   },
   "scripts": {
     "start": "node ./src/bin/server.js",

@@ -66,7 +66,6 @@ function getMatchesByIdUser(req, res, next) {
     db.tx(t => {
         return t.any(sqlMatches.getByIdUser, {id_user: id_user})
             .then(data => {
-                console.log(data);
                 let queries = [];
                 data.forEach(match => {
                     queries.push(getUserById(match.id_opposite_user, id_user));
@@ -107,7 +106,7 @@ function getUserById(id_user, id_opposite_user) {
                 }
             });
     }).then(result => {
-        const data = {
+        return {
             user_general: result[0],
             user_picture: result[1],
             user_address: result[2],
@@ -115,8 +114,6 @@ function getUserById(id_user, id_opposite_user) {
             user_target: result[4],
             channel: result[5]
         }
-        console.log(data);
-            return data;
     }).catch(function (error) {
         console.log(error);
         console.log("Erreur: getUserById - Matches")

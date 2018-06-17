@@ -1,10 +1,7 @@
 import React from 'react';
 import Conversation from './Conversation';
-import { bindActionCreators } from '../../../../../../Library/Caches/typescript/2.9/node_modules/redux';
-import { log } from 'util';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import placeholder from '../../../static/images/placeholder.png';
@@ -21,16 +18,17 @@ export default class Messages extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: this.props.data,
+            user: this.props.data,
             matchesList: [],
-            messages: []
+            messages: [],
+            opposite_user: null
         }
         this.fetchMatches = this.fetchMatches.bind(this);
         this.loadConversation = this.loadConversation.bind(this);
     }
 
     fetchMatches() {
-        fetch('http://localhost:8888/matches/user/' + this.state.data.user_general.id, {
+        fetch('http://localhost:8888/matches/user/' + this.state.user.user_general.id, {
             method: 'GET',
             headers: {
                 'ACCEPT': 'application/json, text/plain, */*',
@@ -49,8 +47,11 @@ export default class Messages extends React.Component {
         this.fetchMatches()
     }
 
-    loadConversation() {
+    loadConversation(opposite_user) {
         // FETCH DES MESSAGES
+        this.setState({
+            opposite_user: opposite_user
+        })
         fetch('', {
             method: 'GET',
             headers: {
@@ -62,12 +63,13 @@ export default class Messages extends React.Component {
             .then((response) => {
                 this.setState({
                     // MICKA : TU SET ICI messages à ce que te renvoie la requête
-                    //messages: response.data
+                    //messages: response.
                 })
             })
     }
     render() {
         let matches = this.state.matchesList;
+        const conversation = this.state.opposite_user !== null ?  <Conversation messages={this.state.messages} user={this.state.user} opposite_user={this.state.opposite_user}/>: <h4>Sélectionne une conversation</h4>
         return (
             <div style={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
                 <div style={{ display: 'flex', flex: 2 }}>
@@ -75,10 +77,7 @@ export default class Messages extends React.Component {
                         {matches.map(elt => {
                             const pictures = elt.user_picture
                             return (
-                                <ListItem
-                                    button
-                                    onClick={() => this.loadConversation()}
-                                >
+                                <ListItem button onClick={() => this.loadConversation(elt)}>
                                     <Avatar alt={elt.user_general.name} src={pictures.length === 0 ? placeholder : pictures[0].url} />
                                     <ListItemText primary={elt.user_general.firstname} />
                                 </ListItem>
@@ -87,7 +86,7 @@ export default class Messages extends React.Component {
                     </List>
                 </div>
                 <div style={{ display: 'flex', flex: 4, padding: '20px' }}>
-                    <Conversation messages={this.state.messages} />
+                {conversation}
                 </div>
             </div>
         )

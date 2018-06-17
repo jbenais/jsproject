@@ -1,7 +1,5 @@
 import React from 'react';
 
-
-
 export default class Message extends React.Component {
     constructor(props) {
         super(props);
@@ -10,11 +8,10 @@ export default class Message extends React.Component {
         }
     }
 
-
     render() {
         // Ajouter nom de la personne qui envoie + contenu du message via les props dans la div
         <div style={{display: 'flex'}}>
-            
+            {this.props.key} hello
         </div>
     }
 }
