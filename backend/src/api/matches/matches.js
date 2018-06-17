@@ -3,6 +3,11 @@ const db = require('../index');
 const MESSAGE_OK = 'OK';
 const sqlMatches = require('../../sql').matches;
 const sqlChannel = require('../../sql').channel;
+const sqlUser = require('../../sql').users;
+const sqlAddress = require('../../sql').address;
+const sqlPicture = require('../../sql').userPicture;
+const sqlUserPreference = require('../../sql').userPreferences;
+const sqlUserTarget = require('../../sql').userTarget;
 const sqlNotification = require('../../sql').notification;
 
 //#region GET
@@ -60,26 +65,62 @@ function getMatchesByIdUser(req, res, next) {
     const id_user = {
         id_user: req.params.id_user
     }
-    db.any(sqlMatches.getByIdUser, id_user)
-        .then(function (data) {
-            const status = 200
-            res.status(status)
-                .json({
-                    status: status,
-                    data: data,
-                    message: MESSAGE_OK
+    db.tx(t => {
+        return t.any(sqlMatches.getByIdUser, id_user)
+            .then(data => {
+                console.log(data);
+                let queries = [];
+                data.forEach(match => {
+                    queries.push(getUserById(match.id_opposite_user));
                 });
-        })
-        .catch(function (error) {
-            const status = 403
-            console.log(error);
-            res.status(status)
-                .json({
-                    status: status,
-                    data: {},
-                    message: error.message
-                });
-        });
+                return t.batch(queries);
+            });
+    }).then(result => {
+        const status = 200
+        res.status(status)
+            .json({
+                status: status,
+                data: result,
+                message: MESSAGE_OK
+            });
+    }).catch(function (error) {
+        const status = 403
+        console.log(error);
+        res.status(status)
+            .json({
+                status: status,
+                data: {},
+                message: error.message
+            });
+    });
+}
+
+function getUserById(id) {
+    return db.tx(t => {
+        return t.oneOrNone(sqlUser.getById, { id: id })
+            .then(data => {
+                if (data) {
+                    const address = t.oneOrNone(sqlAddress.getByIdUser, { id_user: data.id });
+                    const picture = t.any(sqlPicture.getByIdUser, { id_user: data.id });
+                    const preference = t.any(sqlUserPreference.getByIdUser, { id_user: data.id });
+                    const target = t.any(sqlUserTarget.getByIdUser, { id_user: data.id });
+                    return t.batch([data, picture, address, preference, target]);
+                }
+            });
+    }).then(result => {
+        const data = {
+            user_general: result[0],
+            user_picture: result[1],
+            user_address: result[2],
+            user_preference: result[3],
+            user_target: result[4]
+        }
+        console.log(data);
+            return data;
+    }).catch(function (error) {
+        console.log(error);
+        console.log("Erreur: getUserById - Matches")
+    });
 }
 
 //#endregion
@@ -147,7 +188,7 @@ function createMessageService(id_user, id_opposite_user){
                 const notificationTwo = createNotificationJson(id_opposite_user, data.id);
                 const queryOne = t.oneOrNone(sqlNotification.add, notificationOne);
                 const queryTwo = t.oneOrNone(sqlNotification.add, notificationTwo);
-                return t.batch([queryOne, queryTwo])
+                return t.batch([queryOne, queryTwo]);
             });
     })
         .then(() => {
