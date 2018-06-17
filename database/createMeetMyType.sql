@@ -99,7 +99,7 @@ CREATE TABLE T_Channel (
   Id_User_One       SMALLINT        NOT NULL REFERENCES T_User(Id),
   Id_User_Two       SMALLINT        NOT NULL REFERENCES T_User(Id),
   Uuid              VARCHAR(64)     NOT NULL,
-  UNIQUE(Id_User_One, Id_User_Two, Uuid)
+  UNIQUE(Id_User_One, Id_User_Two)
 );
 
 CREATE TABLE T_Notification (
