@@ -68,13 +68,15 @@ CREATE TABLE T_Address (
 CREATE TABLE T_User_MBTI_Preferences (
   Id                SERIAL          PRIMARY KEY NOT NULL,
   Id_User           SMALLINT        NOT NULL REFERENCES T_User(Id),
-  Id_MBTI           SMALLINT        NOT NULL REFERENCES T_MBTI(Id)
+  Id_MBTI           SMALLINT        NOT NULL REFERENCES T_MBTI(Id),
+  UNIQUE(Id_User, Id_MBTI)
 );
 
 CREATE TABLE T_User_Target (
   Id                SERIAL          PRIMARY KEY NOT NULL,
   Id_User           SMALLINT        NOT NULL REFERENCES T_User(Id),
-  Id_Target         SMALLINT        NOT NULL REFERENCES T_Target(Id)
+  Id_Target         SMALLINT        NOT NULL REFERENCES T_Target(Id),
+  UNIQUE(Id_User, Id_Target)
 );
 
 CREATE TABLE T_User_Picture (
