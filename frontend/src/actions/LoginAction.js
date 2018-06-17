@@ -62,6 +62,7 @@ export function update(res) {
 		.then((response) => {
 			state.payload = response.data;
 			dispatch(state)
-		});
+		})
+		.catch(res => console.log(res));
 	}
 }

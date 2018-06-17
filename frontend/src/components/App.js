@@ -8,21 +8,8 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            login: false
         };
     };
-
-    login() {
-        this.setState ({
-            login: true
-        })
-    }
-
-    logout() {
-        this.setState ({
-            login: false
-        })
-    }
     
     render() {
         var content = !this.props.loginReducer.is_logged ? <Login /> : <Home />

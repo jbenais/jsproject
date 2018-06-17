@@ -21,7 +21,7 @@ export default class Profile extends React.Component {
     render() {
         const data = this.props.data;
         let markers = {lat: data.user_address ? data.user_address.latitude : null, lng: data.user_address ? data.user_address.longitude : null}
-        let picture = data.user_picture.length > 0 ? data.user_picture[0].url : placeholder
+        let picture = data.user_picture && data.user_picture.length > 0 ? data.user_picture[0].url : placeholder
         return ( 
             <div id="container">
                 <div className="left">
