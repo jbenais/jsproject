@@ -139,9 +139,9 @@ function postMatches(req, res, next) {
                     const user = createMatchesJson(id_user, id_opposite_user, is_matched, is_liked);
                     if (is_matched){
                         console.log("Match !");
+                        queries.push(t.one(sqlMatches.add, user));
                         queries.push(t.any(sqlMatches.update, { is_matched: true, id: data.id }));
                         queries.push(createMessageService(id_user, id_opposite_user));
-                        queries.push(t.one(sqlMatches.add, user));
                     }
                     else
                         queries.push(t.one(sqlMatches.add, user));
@@ -150,16 +150,16 @@ function postMatches(req, res, next) {
                 else {
                     console.log("No match");
                     const user = createMatchesJson(id_user, id_opposite_user, false, is_liked);
-                    return t.one(sqlMatches.add, user);
+                    return t.batch([t.one(sqlMatches.add, user)]);
                 }
             });
     })
-        .then(() => {
+        .then(data => {
             const status = 200
             res.status(status)
                 .json({
                     status: status,
-                    data: {},
+                    data: data[0],
                     message: MESSAGE_OK
                 });
         })
