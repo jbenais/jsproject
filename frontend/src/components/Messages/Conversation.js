@@ -83,7 +83,7 @@ export default class Conversation extends React.Component {
         return (
             <div style={{ display: 'flex', flexDirection: 'column', width: '80%', padding: '20px', border: '1px solid grey', borderRadius: '5px' }}>
                 {messages.map((message, id) => {
-                    return <Message key={id} name={this.state.opposite_user.user_general.firstname} data={message}/>
+                    return  (<Message key={id} name={this.state.opposite_user.user_general.firstname} data={message}/>)
                 })}
                 <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
                     <TextField
@@ -95,6 +95,7 @@ export default class Conversation extends React.Component {
                         margin="normal"
                     />
                     <Button
+                    disabled={this.state.content.length === 0}
                     style={{backgroundColor: '#01D2CB', color: 'white', borderRadius: '20px', height: '40px'}}
                      onClick={this.sendMessage}>Send</Button>
                 </div>
