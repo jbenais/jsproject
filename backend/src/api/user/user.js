@@ -119,7 +119,9 @@ function filter(res, user) {
     const queryObject = user_general.id_orientation == 3 ? createBiObject(user_general) : createMonoObject(user_general);
     db.any(queryFile, queryObject)
         .then(function (possibleUsers) {
-            possibleUsers = possibleUsers.filter(x => x.is_completed).map(x => { return { user_general: x } })
+            possibleUsers = possibleUsers
+                .filter(x => { return filterBasic(user_general.birthdate, x.age_min, x.age_max, x.is_completed); })
+                .map(x => { return { user_general: x } })
             filterMatches(res, user, possibleUsers).then(possibleUsers => {
                 filterTarget(res, user, possibleUsers).then(possibleUsers => {
                     filterMBTI(res, user, possibleUsers).then(possibleUsers => {
@@ -142,13 +144,19 @@ function filter(res, user) {
         });
 }
 
+function filterBasic(birthdate, opposite_age_min, opposite_age_max, opposite_isCompleted) {
+    const date_upperBound = computeLimitYear(opposite_age_min);
+    const date_lowerBound = computeLimitYear(opposite_age_max);
+    return opposite_isCompleted && (date_lowerBound <= birthdate) && (birthdate <= date_upperBound);
+}
+
 function filterMatches(res, user, possibleUsers) {
     const id_user = user.user_general.id;
     return db.any(sqlMatches.getOngoingByIdUser, { id_user: id_user })
         .then(data => {
             data.forEach(n => {
                 const index = possibleUsers.findIndex(b => b.user_general.id == n.id_opposite_user);
-                if (index != -1){
+                if (index != -1) {
                     possibleUsers.splice(index, 1);
                 }
             });
@@ -275,7 +283,7 @@ function createMonoObject(user_general) {
     const { id, is_male, id_orientation, age_max, age_min } = user_general
     const op_orientation_first = is_male ? 1 : 2;
     const op_orientation_second = 3;
-    return {
+    const result = {
         id: id,
         op_is_male: id_orientation == 1 ? true : false,
         op_orientation_first: op_orientation_first,
@@ -283,6 +291,7 @@ function createMonoObject(user_general) {
         op_birthdate_min: computeLimitYear(age_max),
         op_birthdate_max: computeLimitYear(age_min)
     }
+    return result;
 }
 
 function createBiObject(user_general) {
