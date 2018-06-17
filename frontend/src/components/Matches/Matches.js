@@ -109,12 +109,13 @@ export default class Matches extends React.Component {
     render() {
         const completed = this.props.data.is_completed;
         if (this.state.usersToMatch.length === 0) {
-            this.interval = setInterval(this.fetchMatches, 10000);
+            this.interval = setInterval(this.fetchMatches, 15000);
             return (
 
-                <div style={{ display: 'flex', height: '100vh', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '50px' }}>
+                <div className="loading">
                     <div style={{display: 'flex', justifyContent: 'center'}}>
-                        {completed ? "Nous recherchons des profils compatibles autour de vous..." :  "Veuillez terminer de configurer votre profil" }
+                        {completed ? "Nous recherchons des profils compatibles autour de vous..."
+                        : "Veuillez terminer de configurer votre profil" }
                     </div>
                     <BounceLoader color={"#36D7B7"} loading={true} />
                 </div>
@@ -125,23 +126,28 @@ export default class Matches extends React.Component {
             let birthdate = calculageAge(currentUser.user_general.birthdate);
             let profile = this.state.profilesList.find(elt => currentUser.user_general.id_mbti === elt.id).name
             return (
-                <div style={{ display: 'flex', height: '100vh', flexDirection: 'column', padding: '20px' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', margin: '0 auto', width: '50%', }}>
-                        <div style={{ backgroundColor: 'white', padding: '30px' }}>
-                            <div style={{ display: 'flex', flexDirection: 'row' }}>
-                                <div style={{ display: 'flex', padding: '30px', flex: 1 }}>
+                <div className="matches-content">
+                    <div className="current-match-content">
+                        <div className="match-background">
+                            <div className="match-main-content">
+                                <div className="match-img">
                                     <img id="img" width="140px" height="140px" src="https://picsum.photos/200/300"/>
                                 </div>
-                                <div style={{ display: 'flex', flex: 3, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                                    <div style={{ display: 'flex', fontFamily: 'Roboto', fontWeight: 700, fontSize: '26px', color: '#55545E', letterSpacing: 1 }}>
+                                <div className="match-main-infos">
+                                    <div className="match-firstname">
                                         {currentUser.user_general.firstname}
                                     </div>
-                                    <div style={{ display: 'flex', color: '#F58180', fontFamily: 'Roboto', fontWeight: 500 }}>
-                                        Profession: {currentUser.user_general.profession === null ? "Non communiqué" : currentUser.user_general.profession}
+                                    <div style={{display: 'flex'}}>
+                                        <div className="match-profession">
+                                            Profession: 
+                                        </div>
+                                        <div className="match-profession-value">
+                                            {currentUser.user_general.profession === null ? "Non communiqué" : currentUser.user_general.profession}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', fontFamily: 'Roboto', fontWeight: 300 }}>
+                            <div className="match-other-content">
                                 <div style={{ display: 'flex' }}>
                                     {profile}
                                 </div>
@@ -152,22 +158,28 @@ export default class Matches extends React.Component {
                                     {birthdate ? `${birthdate} ans` : 'Age non communiqué'}
                                 </div>
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '30px' }}>
-                                <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', border: '1px solid #E6E6E6', borderRadius: '7px', padding: '10px', width: '90%' }}>
-                                    <div style={{ fontFamily: 'Roboto', fontWeight: 500, color: '#3E3E3E', fontSize: '20px' }}>
+                            <div className="match-description-content">
+                                <div className="match-description" style={{border: '1px solid #E6E6E6'}}>
+                                    <div className="description">
                                         DESCRIPTION
-                            </div>
-                                    <div style={{ textAlign: 'center', fontFamily: 'Roboto', fontWeight: 300, color: '#3E3E3E', fontSize: '18px', padding: '30px' }}>
+                                    </div>
+                                    <div className="description-value">
                                         {currentUser.user_general.description === null ? "Pas de description" : currentUser.user_general.description}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-evenly', marginTop: '20px' }}>
-                            <Button variant="fab" onClick={() => this.addToMatched(false)} style={{ color: '#FF5D65', backgroundColor: 'white', boxShadow: 'none' }} aria-label="add">
+                        <div className="matches-buttons">
+                            <Button variant="fab"
+                                    onClick={() => this.addToMatched(false)}
+                                    style={{ color: '#FF5D65', backgroundColor: 'white', boxShadow: 'none' }}
+                                    aria-label="add">
                                 <Dislike />
                             </Button>
-                            <Button variant="fab" onClick={() => this.addToMatched(true)} style={{ color: '#22D894', backgroundColor: 'white', boxShadow: 'none' }} aria-label="add">
+                            <Button variant="fab"
+                            onClick={() => this.addToMatched(true)}
+                            style={{ color: '#22D894', backgroundColor: 'white', boxShadow: 'none' }}
+                            aria-label="add">
                                 <Favorite />
                             </Button>
                         </div>
