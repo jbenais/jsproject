@@ -80,7 +80,7 @@ export default class Conversation extends React.Component {
         const opposite_user = this.props.opposite_user;
         const messages = this.state.messages;
         return (
-            <div style={{ display: 'flex', flexDirection: 'column', width: '80%', padding: '20px', border: '1px solid grey', borderRadius: '5px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', width: '80%', padding: '20px', border: '1px solid grey', borderRadius: '5px', overflow: 'auto' }}>
                 {messages.map((message, id) => {
                     return  (<Message key={id} name={this.state.opposite_user.user_general.firstname} data={message}/>)
                 })}

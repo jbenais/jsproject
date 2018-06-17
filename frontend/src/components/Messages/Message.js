@@ -13,7 +13,7 @@ class Message extends React.Component {
         const data = this.props.data;
         const name = data.id_sender === this.props.loginReducer.user_general.id ? this.props.loginReducer.user_general.firstname : this.props.name;
         return (
-            <div style={{ display: 'flex', overflow: 'auto', flexDirection: 'column', padding: '10px', borderBottom: '1px solid #E6E6E6' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', padding: '10px', borderBottom: '1px solid #E6E6E6' }}>
                 <div>
                     {name} a envoyé :
                 </div>
