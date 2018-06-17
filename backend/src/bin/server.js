@@ -29,7 +29,7 @@ io.on('connection', (socket) => {
         console.log(`${user.firstname} emit to room ${channel.uuid}`)
         messageDB.sender_name = user.firstname;
         messageDB.receiver_name = opposite_user.firstname;
-        socket.broadcast.to(channel.uuid).emit('message', {messageDB});
+        io.in(channel.uuid).emit('message', {messageDB});
     });
 
     socket.on('leaveRoom', (data) => {
