@@ -74,10 +74,10 @@ export default class Messages extends React.Component {
             <div style={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
                 <div style={{ display: 'flex', flex: 2 }}>
                     <List>
-                        {matches.map(elt => {
+                        {matches.map((elt, id) => {
                             const pictures = elt.user_picture
                             return (
-                                <ListItem button onClick={() => this.loadConversation(elt)}>
+                                <ListItem key={id} button onClick={() => this.loadConversation(elt)}>
                                     <Avatar alt={elt.user_general.name} src={pictures.length === 0 ? placeholder : pictures[0].url} />
                                     <ListItemText primary={elt.user_general.firstname} />
                                 </ListItem>

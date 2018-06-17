@@ -9,14 +9,14 @@ export default class Conversation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            content: [],
-            // messages: [],
+            content: "",
+            messages: [],
             user: this.props.user,
             opposite_user: this.props.opposite_user,
         }
         this.handleChange = this.handleChange.bind(this);
         this.sendMessage = this.sendMessage.bind(this);
-
+        this.setMessage = this.setMessage.bind(this);
     }
 
     componentDidMount() {
@@ -26,11 +26,15 @@ export default class Conversation extends React.Component {
         socket.on('message', function(data){
             const {messageDB} = data;
             alert(`${messageDB.sender_name} said ${messageDB.content}`);
-            // this.setState({
-            //     messages: messages.push({content: data.content})
-            // })
+            setMessage(messageDB);
         });
       }
+
+    setMessage(data){
+        this.setState({
+            messages: this.state.messages.push({content: data})
+        })
+    }
 
     sendMessage() {
         const message = {
@@ -62,11 +66,14 @@ export default class Conversation extends React.Component {
     render() {
         const user = this.props.user;
         const opposite_user = this.props.opposite_user;
+        const messages = this.state.messages;
+        console.log("messages");
+        console.log(messages);
         return (
             <div style={{ display: 'flex', flexDirection: 'column', width: '80%', padding: '20px', border: '1px solid grey', borderRadius: '5px' }}>
-                {/* {messages.map((message) => {
-                    return <Message key={message}/>
-                })} */}
+                {messages.map((message, id) => {
+                    return <Message key={message.id} content={message.content}/>
+                })}
                 <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
                     <TextField
                         id="multiline-flexible"

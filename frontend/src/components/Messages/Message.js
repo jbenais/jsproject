@@ -9,9 +9,12 @@ export default class Message extends React.Component {
     }
 
     render() {
+        const content = this.props.content;
+        return (
+            <div style={{display: 'flex'}}>
+                {content}
+            </div>
+        )
         // Ajouter nom de la personne qui envoie + contenu du message via les props dans la div
-        <div style={{display: 'flex'}}>
-            {this.props.key} hello
-        </div>
     }
 }
