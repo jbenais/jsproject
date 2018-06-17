@@ -62,16 +62,14 @@ function getMatchesById(req, res, next) {
 }
 
 function getMatchesByIdUser(req, res, next) {
-    const id_user = {
-        id_user: req.params.id_user
-    }
+    const id_user = req.params.id_user
     db.tx(t => {
-        return t.any(sqlMatches.getByIdUser, id_user)
+        return t.any(sqlMatches.getByIdUser, {id_user: id_user})
             .then(data => {
                 console.log(data);
                 let queries = [];
                 data.forEach(match => {
-                    queries.push(getUserById(match.id_opposite_user));
+                    queries.push(getUserById(match.id_opposite_user, id_user));
                 });
                 return t.batch(queries);
             });
@@ -95,16 +93,17 @@ function getMatchesByIdUser(req, res, next) {
     });
 }
 
-function getUserById(id) {
+function getUserById(id_user, id_opposite_user) {
     return db.tx(t => {
-        return t.oneOrNone(sqlUser.getById, { id: id })
+        return t.oneOrNone(sqlUser.getById, { id: id_user })
             .then(data => {
                 if (data) {
                     const address = t.oneOrNone(sqlAddress.getByIdUser, { id_user: data.id });
                     const picture = t.any(sqlPicture.getByIdUser, { id_user: data.id });
                     const preference = t.any(sqlUserPreference.getByIdUser, { id_user: data.id });
                     const target = t.any(sqlUserTarget.getByIdUser, { id_user: data.id });
-                    return t.batch([data, picture, address, preference, target]);
+                    const channel = t.oneOrNone(sqlChannel.getByIdUsers, { id_user_one: id_user, id_user_two: id_opposite_user});
+                    return t.batch([data, picture, address, preference, target, channel]);
                 }
             });
     }).then(result => {
@@ -113,7 +112,8 @@ function getUserById(id) {
             user_picture: result[1],
             user_address: result[2],
             user_preference: result[3],
-            user_target: result[4]
+            user_target: result[4],
+            channel: result[5]
         }
         console.log(data);
             return data;
