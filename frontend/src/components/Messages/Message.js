@@ -13,7 +13,7 @@ export default class Message extends React.Component {
         console.log("data");
         console.log(data);
         return (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', overflow: 'auto', flexDirection: 'column', padding: '10px', borderBottom: '1px solid #E6E6E6' }}>
                 <div>
                     {data.sender_name} a envoyé :
                 </div>

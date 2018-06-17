@@ -62,31 +62,31 @@ export default class Messages extends React.Component {
             .then((resp) => resp.json())
             .then((response) => {
                 this.setState({
-                    // MICKA : TU SET ICI messages à ce que te renvoie la requête
-                    //messages: response.
                 })
             })
     }
     render() {
         let matches = this.state.matchesList;
-        const conversation = this.state.opposite_user !== null ?  <Conversation messages={this.state.messages} user={this.state.user} opposite_user={this.state.opposite_user}/>: <h4>Sélectionne une conversation</h4>
+        const conversation = this.state.opposite_user !== null ? 
+            <Conversation messages={this.state.messages} user={this.state.user} opposite_user={this.state.opposite_user}/>
+            : <div style={{fontFamily: 'Roboto', fontWeight: 500, fontSize: '20px', color: 'grey'}}>Sélectionne une conversation</div>
         return (
             <div style={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
                 <div style={{ display: 'flex', flex: 2 }}>
-                    <List>
+                    <List style={{width: '100%'}}>
                         {matches.map((elt, id) => {
                             const pictures = elt.user_picture
                             return (
                                 <ListItem key={id} button onClick={() => this.loadConversation(elt)}>
                                     <Avatar alt={elt.user_general.name} src={pictures.length === 0 ? placeholder : pictures[0].url} />
-                                    <ListItemText primary={elt.user_general.firstname} />
+                                    <ListItemText style={{width: '100%'}} primary={elt.user_general.firstname} />
                                 </ListItem>
                             )
                         })}
                     </List>
                 </div>
-                <div style={{ display: 'flex', flex: 4, padding: '20px' }}>
-                {conversation}
+                <div style={{ display: 'flex', flex: 4, padding: '50px' }}>
+                    {conversation}
                 </div>
             </div>
         )

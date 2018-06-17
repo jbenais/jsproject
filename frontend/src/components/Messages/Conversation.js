@@ -25,6 +25,21 @@ export default class Conversation extends React.Component {
             channel: this.state.opposite_user.channel
         });
         socket.on('message', this.setMessage);
+        console.log(this.state.opposite_user.channel);
+        fetch('http://localhost:8888/messages/channel/' + this.state.opposite_user.channel.id + 
+              '/date/' + new Date().toISOString().slice(0, 19).replace('T', ' '), {
+            method: 'GET',
+            headers: {
+                'ACCEPT': 'application/json, text/plain, */*',
+                'Content-type': 'application/json'
+            },
+        })
+            .then((resp) => resp.json())
+            .then((response) => {
+                this.setState({
+                    messages: response.data
+                })
+            })
       }
 
     
