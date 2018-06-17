@@ -86,8 +86,6 @@ export default class Matches extends React.Component {
             }
         }
         this.removeFromList();
-        console.log("Removed from list");
-        console.log(this.state.usersToMatch);
         fetch('http://localhost:8888/matches', {
             method: 'POST',
             headers: {
@@ -105,7 +103,6 @@ export default class Matches extends React.Component {
         })
         .then(resp => resp.json())
         .then((response) => {
-                console.log("response from match");
                 console.log(response.data);
         })
         .catch((res) => console.log(res))
@@ -128,7 +125,6 @@ export default class Matches extends React.Component {
         } else {
             clearInterval(this.interval);
             const currentUser = this.state.usersToMatch[0];
-            console.log(currentUser);
             let birthdate = calculageAge(currentUser.user_general.birthdate);
             const profile = this.state.profilesList.find(elt => currentUser.user_general.id_mbti === elt.id)
             const profileName = profile ? profile.name : "N/A"

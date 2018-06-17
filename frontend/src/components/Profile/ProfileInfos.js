@@ -119,7 +119,6 @@ class ProfileInfos extends React.Component {
                 [name]: event.target.value,
             });
             let datas = [];
-            console.log(this.state[name]);
             event.target.value.forEach((elt, index) => {
                 let idx = this.state[list].find(elm => { return elm.name == elt }).id
                 datas.push({

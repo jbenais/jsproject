@@ -19,7 +19,6 @@ export function login(res) {
 			})
 			.then((resp) => resp.json())
 			.then((response) => {
-				console.log("response");
 				console.log(response.data);
 				state.payload = response.data;
 				dispatch(state)
