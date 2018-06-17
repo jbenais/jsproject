@@ -98,11 +98,12 @@ export default class Matches extends React.Component {
                 }
             })
         })
-        .then((resp) => resp.json())
-            .then((response) => {
-                console.log(response);
+        .then(resp => resp.json())
+        .then((response) => {
+                console.log("response from match");
+                console.log(response.data);
                 this.removeFromList();
-            })
+        })
         .catch((res) => console.log(res))
     }
 
@@ -124,14 +125,15 @@ export default class Matches extends React.Component {
             clearInterval(this.interval);
             let currentUser = this.state.usersToMatch[0];
             let birthdate = calculageAge(currentUser.user_general.birthdate);
-            let profile = this.state.profilesList.find(elt => currentUser.user_general.id_mbti === elt.id).name
+            const profile = this.state.profilesList.find(elt => currentUser.user_general.id_mbti === elt.id)
+            const profileName = profile ? profile.name : "N/A"
             return (
                 <div className="matches-content">
                     <div className="current-match-content">
                         <div className="match-background">
                             <div className="match-main-content">
                                 <div className="match-img">
-                                    <img id="img" width="140px" height="140px" src="https://picsum.photos/200/300"/>
+                                    <img id="img" width="140px" height="140px" src={currentUser.user_picture[0].url}/>
                                 </div>
                                 <div className="match-main-infos">
                                     <div className="match-firstname">
@@ -149,13 +151,13 @@ export default class Matches extends React.Component {
                             </div>
                             <div className="match-other-content">
                                 <div style={{ display: 'flex' }}>
-                                    {profile}
+                                    MBTI: {profileName}
                                 </div>
                                 <div style={{ display: 'flex' }}>
                                     -
                                 </div>
                                 <div style={{ display: 'flex' }}>
-                                    {birthdate ? `${birthdate} ans` : 'Age non communiqué'}
+                                    Age: {birthdate ? `${birthdate} ans` : 'Age non communiqué'}
                                 </div>
                             </div>
                             <div className="match-description-content">

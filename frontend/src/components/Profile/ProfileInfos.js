@@ -319,7 +319,7 @@ class ProfileInfos extends React.Component {
                             margin="normal"
                         >
                             {this.state.profileList.map(option => (
-                                <option key={option.id} value={option.name}>
+                                <option key={option.name} value={option.name}>
                                     {option.name}
                                 </option>
                             ))}
