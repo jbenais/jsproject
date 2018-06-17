@@ -34,7 +34,7 @@ class ProfileInfos extends React.Component {
         this.state = {
             lastname: this.props.data.user_general.lastname,
             firstname: this.props.data.user_general.firstname,
-            birthdate: this.props.data.user_general.birthdate ? (this.props.data.user_general.birthdate).split('T', 1)[0] : '01-01-2000',
+            birthdate: this.props.data.user_general.birthdate ? this.props.data.user_general.birthdate.split('T', 1)[0] : '0000-00-00',
             profession: this.props.data.user_general.profession,
             description: this.props.data.user_general.description,
             gender: this.props.data.user_general.is_male ? 'Homme' : 'Femme',
@@ -138,7 +138,6 @@ class ProfileInfos extends React.Component {
     }
 
     handleTargetChange(elm) {
-        console.log(elm);
         return (event => {
             let elt = {
                 "id_user": this.props.data.user_general.id,
@@ -181,20 +180,19 @@ class ProfileInfos extends React.Component {
             maxDistance: value
         })
     }
-
-    testfun() {
-        console.log(this.state.targetProfiles);
-        return this.state.targetProfiles;
+    onEdit() {
+        this.setState({
+            edit: !this.state.edit
+        })
     }
-
     editProfile(value) {
-        console.log(this.state.user_target);
+        const birthdate = this.state.birthdate;
         if (!value) {
             let data = {
                 user_general: {
                     lastname: this.state.lastname,
                     firstname: this.state.firstname,
-                    birthdate: this.state.birthdate,
+                    birthdate: birthdate,
                     userProfile: this.state.userProfile,
                     profession: this.state.profession,
                     description: this.state.description,
@@ -214,7 +212,7 @@ class ProfileInfos extends React.Component {
                     longitude: this.props.position.lng
                 } : null,
                 user_preferences: this.state.user_preferences,
-                user_target: this.state.user_target
+                user_target: this.state.user_target 
 
             }
             console.log(data);
@@ -234,7 +232,7 @@ class ProfileInfos extends React.Component {
             <div className="profile-infos-content">
                 <div className="button-edit">
                     <div>
-                        <Button onClick={() => this.editProfile(true)}>
+                        <Button onClick={this.onEdit.bind(this)}>
                             <Settings />
                         </Button>
                     </div>
