@@ -1,11 +1,9 @@
 import React from 'react';
-import { log } from 'util';
 import Message from './Message';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { DialogActions } from '@material-ui/core';
 let socket = require('socket.io-client')('http://localhost:8888/');
-// JULIA: Display des messages avec un input en bas et un event (bouton send / enter)
+
 export default class Conversation extends React.Component {
     constructor(props) {
         super(props);
@@ -14,6 +12,7 @@ export default class Conversation extends React.Component {
             messages: [],
             user: this.props.user,
             opposite_user: this.props.opposite_user,
+            sent: false,
         }
         this.handleChange = this.handleChange.bind(this);
         this.sendMessage = this.sendMessage.bind(this);
@@ -76,8 +75,6 @@ export default class Conversation extends React.Component {
     }
 
     render() {
-        const user = this.props.user;
-        const opposite_user = this.props.opposite_user;
         const messages = this.state.messages;
         return (
             <div style={{ display: 'flex', flexDirection: 'column', width: '80%', padding: '20px', border: '1px solid grey', borderRadius: '5px', overflow: 'auto' }}>
