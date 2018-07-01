@@ -69,8 +69,6 @@ INSERT INTO t_target
          (DEFAULT, 'Amitie'),
          (DEFAULT, 'Partenaire de travail');
 
-
-
 INSERT INTO t_user
   VALUES  (DEFAULT, 'natalie.portman@gmail.com', 'Natalie', 'Portman', '9/06/1981', false, 'I like men', 'Try me', 150, 20, 30, 12, 1, true),
           (DEFAULT, 'brigitte.bardot@gmail.com', 'Brigitte', 'Bardot', '28/09/1934', false, 'I like men', 'Save animals', 150, 20, 30, 12, 1, true),
@@ -179,3 +177,18 @@ INSERT INTO t_address
          (DEFAULT, 13, 49.1466, 0.2293),
          (DEFAULT, 14, 40.416500, -3.7025600),
          (DEFAULT, 15, 36.8189700, 10.1657900);
+
+INSERT INTO t_user_picture
+  VALUES (DEFAULT, 11, 'https://photos.cri.epita.net/pre_q', true),
+         (DEFAULT, 12, 'https://photos.cri.epita.net/semel_p', true),
+         (DEFAULT, 13, 'https://photos.cri.epita.net/espiar_j', true),
+         (DEFAULT, 14, 'https://photos.cri.epita.net/feijoe_y', true),
+         (DEFAULT, 15, 'https://photos.cri.epita.net/nedjad_f', true);
+
+-- CREATE TABLE T_User_Picture (
+--   Id                SERIAL          PRIMARY KEY NOT NULL,
+--   Id_User           SMALLINT        NOT NULL REFERENCES T_User(Id),
+--   Url               VARCHAR(256)    ,
+--   Is_Profile        BOOLEAN         NOT NULL DEFAULT FALSE,
+--   UNIQUE(Id_User, Is_Profile)
+-- );
