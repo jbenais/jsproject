@@ -4,6 +4,7 @@ import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login';
 import * as LoginAction from '../actions/LoginAction';
 import { connect } from "react-redux";
+const keys = require('./data.json');
 
 class Login extends React.Component {
     constructor(props) {
@@ -57,7 +58,7 @@ class Login extends React.Component {
                                 <FacebookLogin
                                     cssClass="btnFacebook"
                                     textButton="CONNEXION AVEC FACEBOOK"
-                                    appId="1070554803153257"
+                                    appId={keys.facebookId}
                                     autoLoad={true}
                                     scope="public_profile, email, user_birthday"
                                     fields="name,email,picture, birthday, gender"
@@ -73,7 +74,7 @@ class Login extends React.Component {
                                     fontFamily: 'Roboto', color: 'white', fontWeight: 600,
                                     height: '50px', width: '75%', backgroundColor: '#FE0000'
                                 }}
-                                clientId="858362894339-vvqqtpnjnnkqu4klhsv9ob4memvtkkr1.apps.googleusercontent.com"
+                                clientId={keys.googleId}
                                 className="google-login"
                                 scope="profile email"
                                 fetchBasicProfile={false}
